@@ -1,0 +1,14 @@
+venv/
+
+__pycache__/
+*.pyc
+
+Results/
+Results*/
+
+*.h5
+*.npy
+*.pt
+*.pth
+dataset/
+datasets/
