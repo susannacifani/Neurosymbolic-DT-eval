@@ -20,10 +20,12 @@ While Decision Transformers show strong performance in standard offline RL setti
 5. Check the results by running: python RL/Env/table_results.py
 
 **Trained models & datasets**
-The trained models and the trajectory datasets (.h5 files) are too large for this Git repo. Download them here: [https://drive.google.com/drive/folders/1CJYAlQFJNqAk1TmHv0yE2Fq6mCnsiNwV?usp=sharing]
 
 
-# ⚠️ Important
+* The trained models and the trajectory datasets (.h5 files) are too large for this Git repo. Download them here: [https://drive.google.com/drive/folders/1CJYAlQFJNqAk1TmHv0yE2Fq6mCnsiNwV?usp=sharing]
+
+
+## ⚠️ Important
 * The `observations` and `rewards` arrays stored in the `.h5` dataset files are shifted by one step: `observations[i]` is the state **before** the action is taken, while `rewards[i]` is the reward **after** that action (i.e. the reward tied to `observations[i+1]`, not `observations[i]`).
 
 
