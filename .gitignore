@@ -1,14 +1,25 @@
-venv/
 
+venv/
 __pycache__/
 *.pyc
 
-Results/
-Results*/
+
+.vscode/
+
+Dataset/Symbolic/
+Dataset/Image/
+DT/Symbolic/
+DT/Image/
+Grounding/Symbolic/
+Grounding/Image/
+WorldModel/Symbolic/
+WorldModel/Image/
 
 *.h5
+*.tmp
 *.npy
+*.npz
 *.pt
 *.pth
-dataset/
-datasets/
+
+
