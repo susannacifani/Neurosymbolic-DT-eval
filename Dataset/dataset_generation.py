@@ -1,11 +1,19 @@
-import numpy as np
-import h5py
 import os
-import random 
-from Environment import GridWorldEnv
+import random
+import sys
+from pathlib import Path
+
+import h5py
+import numpy as np
+
+# cartella Dataset/ (dove sta questo script) e motore comune in NRM/NeuralRewardMachines
+DATASET_ROOT = Path(__file__).resolve().parent
+sys.path.insert(0, str(DATASET_ROOT.parent / "NeuralRewardMachines"))
+sys.path.insert(0, str(DATASET_ROOT))
+
 from LTL_tasks import formulas
+from RL.Env.Environment import GridWorldEnv
 from DijkstraTraj import task1, task2, task3, task4, task5, task6, task7, task8, task9, task10
-from utils import setup_folders, save_in_folder
 
 EPSILON = 0.2  # 20% probability of noise injection
 MAX_STEPS = 50 
@@ -19,27 +27,30 @@ DIJKSTRA_FUNCS = {
 
 
 
+def final_observation(env, state_type):
+    """Osservazione dopo l'ultima azione della traiettoria.
+    Le righe del dataset sono (s_t, a_t, r_t) con s_t lo stato PRIMA dell'azione, quindi lo
+    stato in cui l'episodio finisce (es. la casella della vittoria) non sarebbe salvato."""
+    x, y = env._agent_location
+    if state_type == "image":
+        return env.image_locations[x, y].detach().cpu().numpy().astype(np.float32)
+    return np.array(env._agent_location, dtype=np.float32)
+
+
 def medium_expert(task_id, file, state_type, reward_type):
     H5_PATH = file
 
     formula = formulas[task_id]
 
 
-    env = GridWorldEnv(formula=formula, render_mode="rgb_array", state_type=state_type, train=False)
-
-    with h5py.File(H5_PATH, 'a') as f:
-        if len(f.keys()) > 0:
-            start_idx = max([int(k) for k in f.keys()]) + 1
-            print(f"Ripristinato dataset esistente. Ricomincio da {start_idx}.")
-        else:
-            start_idx = 0
+    env = GridWorldEnv(formula=formula, render_mode="rgb_array", state_type=state_type, train=False, reward_type=reward_type)
 
     print(f"Inizio generazione...")
-    diz, tot = DIJKSTRA_FUNCS[task_id]() 
+    diz, tot = DIJKSTRA_FUNCS[task_id]()
 
-    i = start_idx
-    with h5py.File(H5_PATH, 'a') as f:
-        # 50% top traj 
+    i = 0
+    with h5py.File(H5_PATH, 'w') as f:
+        # 50% top traj
         print("50% top traj")
         for start_pos, trajectories in diz.items():
             pos_da_passare = list(start_pos)
@@ -58,11 +69,6 @@ def medium_expert(task_id, file, state_type, reward_type):
                     if reward == 100.0:
                         done = True
 
-                    # FIX WIN 
-                    if reward_type == "three_value":
-                        if step_idx == len(path) - 1:
-                            reward = 100.0
-                            done = True
                     
                     if state_type == "image":
                         buffer['observations'].append(current_state.detach().cpu().numpy().astype(np.float32))
@@ -95,6 +101,7 @@ def medium_expert(task_id, file, state_type, reward_type):
                 grp.create_dataset('rewards', data=np.array(buffer['rewards']))
                 grp.create_dataset('terminals', data=np.array(buffer['terminals']))
                 grp.create_dataset('returns_to_go', data=np.array(rtg_lista))
+                grp.create_dataset('final_observation', data=final_observation(env, state_type))
                 i += 1
 
         # 50% noise
@@ -124,12 +131,14 @@ def medium_expert(task_id, file, state_type, reward_type):
                         buffer['actions'].append(bad_act)
                         buffer['rewards'].append(bad_reward)
                         buffer['terminals'].append(bad_done)
-                        
-                        if not bad_done and obs_bad[1].tolist() != current_state.tolist():
+                        # la mossa di rumore puo' chiudere l'episodio (vittoria o fallimento)
+                        if bad_done: break
+
+                        if obs_bad[1].tolist() != current_state.tolist():
                             reverse_act = (bad_act + 2) % 4
                             dfa_state_rev = obs_bad[0]
                             current_state_rev = obs_bad[1]
-                            
+
                             obs_rev, rev_reward, rev_done, rev_trunc, info = env.step(reverse_act)
 
                             if state_type == "image":
@@ -140,23 +149,19 @@ def medium_expert(task_id, file, state_type, reward_type):
                             buffer['actions'].append(reverse_act)
                             buffer['rewards'].append(rev_reward)
                             buffer['terminals'].append(rev_done)
-                            obs = obs_rev 
+                            obs = obs_rev
+                            if rev_done: break
                         else:
                             obs = obs_bad
 
                     dfa_state = obs[0]
                     current_state = obs[1]
-                    
+
                     obs_nuova, reward, done, truncated, info = env.step(act)
-                    
+
                     if reward == 100.0:
                         done = True
 
-                    # FIX WIN 
-                    if reward_type == "three_value":
-                        if step_idx == len(path) - 1:
-                            reward = 100.0
-                            done = True
 
                     if state_type == "image":
                         buffer['observations'].append(current_state.detach().cpu().numpy().astype(np.float32))
@@ -189,6 +194,7 @@ def medium_expert(task_id, file, state_type, reward_type):
                 grp.create_dataset('rewards', data=np.array(buffer['rewards']))
                 grp.create_dataset('terminals', data=np.array(buffer['terminals']))
                 grp.create_dataset('returns_to_go', data=np.array(rtg_lista))
+                grp.create_dataset('final_observation', data=final_observation(env, state_type))
                 i += 1
                 
                 if i % 100 == 0:
@@ -201,20 +207,13 @@ def medium(task_id, file, state_type, reward_type):
 
     formula = formulas[task_id]
 
-    env = GridWorldEnv(formula=formula, render_mode="rgb_array", state_type=state_type, train=False)
-
-    with h5py.File(H5_PATH, 'a') as f:
-        if len(f.keys()) > 0:
-            start_idx = max([int(k) for k in f.keys()]) + 1
-            print(f"Ripristinato dataset esistente. Ricomincio da {start_idx}.")
-        else:
-            start_idx = 0
+    env = GridWorldEnv(formula=formula, render_mode="rgb_array", state_type=state_type, train=False, reward_type=reward_type)
 
     print(f"Inizio generazione...")
     diz, tot = DIJKSTRA_FUNCS[task_id]()
 
-    i = start_idx
-    with h5py.File(H5_PATH, 'a') as f:
+    i = 0
+    with h5py.File(H5_PATH, 'w') as f:
         
         # 50% noise traj
         print("50% noise traj...")
@@ -242,14 +241,16 @@ def medium(task_id, file, state_type, reward_type):
                         buffer['actions'].append(bad_act)
                         buffer['rewards'].append(bad_reward)
                         buffer['terminals'].append(bad_done)
-                        
-                        if not bad_done and obs_bad[1].tolist() != current_state.tolist():
+                        # la mossa di rumore puo' chiudere l'episodio (vittoria o fallimento)
+                        if bad_done: break
+
+                        if obs_bad[1].tolist() != current_state.tolist():
                             reverse_act = (bad_act + 2) % 4
                             dfa_state_rev = obs_bad[0]
                             current_state_rev = obs_bad[1]
-                            
+
                             obs_rev, rev_reward, rev_done, rev_trunc, info = env.step(reverse_act)
-                            
+
                             if state_type == "image":
                                 buffer['observations'].append(current_state_rev.detach().cpu().numpy().astype(np.float32))
                             elif state_type == "symbolic":
@@ -258,7 +259,8 @@ def medium(task_id, file, state_type, reward_type):
                             buffer['actions'].append(reverse_act)
                             buffer['rewards'].append(rev_reward)
                             buffer['terminals'].append(rev_done)
-                            obs = obs_rev 
+                            obs = obs_rev
+                            if rev_done: break
                         else:
                             obs = obs_bad
 
@@ -270,11 +272,6 @@ def medium(task_id, file, state_type, reward_type):
                     if reward == 100.0:
                         done = True
                     
-                    # FIX WIN 
-                    if reward_type == "three_value":
-                        if step_idx == len(path) - 1:
-                            reward = 100.0
-                            done = True
                     
                     if state_type == "image":
                         buffer['observations'].append(current_state.detach().cpu().numpy().astype(np.float32))
@@ -307,6 +304,7 @@ def medium(task_id, file, state_type, reward_type):
                 grp.create_dataset('rewards', data=np.array(buffer['rewards']))
                 grp.create_dataset('terminals', data=np.array(buffer['terminals']))
                 grp.create_dataset('returns_to_go', data=np.array(rtg_lista))
+                grp.create_dataset('final_observation', data=final_observation(env, state_type))
                 i += 1
 
         # 50% noise traj
@@ -336,14 +334,16 @@ def medium(task_id, file, state_type, reward_type):
                         buffer['actions'].append(bad_act)
                         buffer['rewards'].append(bad_reward)
                         buffer['terminals'].append(bad_done)
-                        
-                        if not bad_done and obs_bad[1].tolist() != current_state.tolist():
+                        # la mossa di rumore puo' chiudere l'episodio (vittoria o fallimento)
+                        if bad_done: break
+
+                        if obs_bad[1].tolist() != current_state.tolist():
                             reverse_act = (bad_act + 2) % 4
                             dfa_state_rev = obs_bad[0]
                             current_state_rev = obs_bad[1]
-                            
+
                             obs_rev, rev_reward, rev_done, rev_trunc, info = env.step(reverse_act)
-                            
+
 
                             if state_type == "image":
                                 buffer['observations'].append(current_state_rev.detach().cpu().numpy().astype(np.float32))
@@ -353,7 +353,8 @@ def medium(task_id, file, state_type, reward_type):
                             buffer['actions'].append(reverse_act)
                             buffer['rewards'].append(rev_reward)
                             buffer['terminals'].append(rev_done)
-                            obs = obs_rev 
+                            obs = obs_rev
+                            if rev_done: break
                         else:
                             obs = obs_bad
 
@@ -365,11 +366,6 @@ def medium(task_id, file, state_type, reward_type):
                     if reward == 100.0:
                         done = True
 
-                    # FIX WIN 
-                    if reward_type == "three_value":
-                        if step_idx == len(path) - 1:
-                            reward = 100.0
-                            done = True
                     
                     if state_type == "image":
                         buffer['observations'].append(current_state.detach().cpu().numpy().astype(np.float32))
@@ -402,6 +398,7 @@ def medium(task_id, file, state_type, reward_type):
                 grp.create_dataset('rewards', data=np.array(buffer['rewards']))
                 grp.create_dataset('terminals', data=np.array(buffer['terminals']))
                 grp.create_dataset('returns_to_go', data=np.array(rtg_lista))
+                grp.create_dataset('final_observation', data=final_observation(env, state_type))
                 i += 1
                 
                 if i % 100 == 0:
@@ -414,7 +411,7 @@ def medium_replay(task_id, file, state_type, reward_type):
 
     formula = formulas[task_id]
 
-    env = GridWorldEnv(formula=formula, render_mode="rgb_array", state_type=state_type, train=False)
+    env = GridWorldEnv(formula=formula, render_mode="rgb_array", state_type=state_type, train=False, reward_type=reward_type)
 
     def save_to_h5(f, i, start_pos, buffer):
         raw_rewards = buffer['rewards']
@@ -434,6 +431,7 @@ def medium_replay(task_id, file, state_type, reward_type):
         grp.create_dataset('rewards', data=np.array(buffer['rewards']))
         grp.create_dataset('terminals', data=np.array(buffer['terminals']))
         grp.create_dataset('returns_to_go', data=np.array(rtg_lista))
+        grp.create_dataset('final_observation', data=final_observation(env, state_type))
 
     with h5py.File(H5_PATH, 'w') as f:
         i = 0
@@ -462,8 +460,10 @@ def medium_replay(task_id, file, state_type, reward_type):
                         buffer['actions'].append(bad_act)
                         buffer['rewards'].append(r_bad)
                         buffer['terminals'].append(d_bad)
-                        
-                        if not d_bad and obs_bad[1].tolist() != obs[1].tolist():
+                        # la mossa di rumore puo' chiudere l'episodio (vittoria o fallimento)
+                        if d_bad: break
+
+                        if obs_bad[1].tolist() != obs[1].tolist():
                             reverse_act = (bad_act + 2) % 4
                             obs, r_rev, d_rev, _, _ = env.step(reverse_act)
                             if state_type == "image":
@@ -474,6 +474,7 @@ def medium_replay(task_id, file, state_type, reward_type):
                             buffer['actions'].append(reverse_act)
                             buffer['rewards'].append(r_rev)
                             buffer['terminals'].append(d_rev)
+                            if d_rev: break
                         else: obs = obs_bad
 
                     obs_next, r, d, _, _ = env.step(act)
@@ -481,11 +482,6 @@ def medium_replay(task_id, file, state_type, reward_type):
                     if r == 100.0:
                         d = True
 
-                    # FIX WIN 
-                    if reward_type == "three_value":
-                        if step_idx == len(path) - 1:
-                            r = 100.0
-                            d = True
                 
 
                     if state_type == "image":
@@ -530,17 +526,42 @@ def medium_replay(task_id, file, state_type, reward_type):
                 if i % 100 == 0: print(f"Tot traj: {i}")
 
 
+def dataset_folder(state_type, reward_type, task_id):
+    """Dataset/<State>/<reward>/task<N>/ (contiene i 3 file .h5)"""
+    folder = DATASET_ROOT / state_type.capitalize() / reward_type / f"task{task_id + 1}"
+    folder.mkdir(parents=True, exist_ok=True)
+    return folder
+
+
 def generate_datasets(state_type, reward_type, task_id):
-    paths = setup_folders(state_type, reward_type, task_id)
+    folder = dataset_folder(state_type, reward_type, task_id)
 
-    h5_path = paths["datasets"] / 'dataset_medium_expert.h5'
-    if not os.path.exists(h5_path): medium_expert(task_id, h5_path, state_type, reward_type)
+    generators = [("medium_expert", medium_expert), ("medium", medium), ("medium_replay", medium_replay)]
+    for dataset_idx, (name, generator) in enumerate(generators):
+        h5_path = folder / f'dataset_{name}.h5'
+        if os.path.exists(h5_path):
+            continue
+        # stesso seed per symbolic e image (e per distance/three_value): a parita' di
+        # task e dataset le traiettorie sono le stesse, cambia solo l'osservazione
+        random.seed(1000 * task_id + dataset_idx)
+        # si scrive su un file temporaneo e lo si rinomina solo a fine generazione,
+        # cosi' un'interruzione non lascia un file parziale che verrebbe poi saltato
+        tmp_path = h5_path.with_suffix('.h5.tmp')
+        generator(task_id, tmp_path, state_type, reward_type)
+        os.replace(tmp_path, h5_path)
 
-    h5_path = paths["datasets"] / 'dataset_medium.h5'
-    if not os.path.exists(h5_path): medium(task_id, h5_path, state_type, reward_type)
 
-    h5_path = paths["datasets"] / 'dataset_medium_replay.h5'
-    if not os.path.exists(h5_path): medium_replay(task_id, h5_path, state_type, reward_type)
-
-
-
+if __name__ == "__main__":
+    # =====================================================================
+    # CONFIGURAZIONE: modifica qui cosa generare, poi premi Run
+    # (i file gia' presenti vengono saltati)
+    # =====================================================================
+    STATE_TYPES = ["symbolic", "image"]
+    REWARD_TYPES = ["distance", "three_value"]
+    TASKS = range(1, 11)
+    # =====================================================================
+    for state_type in STATE_TYPES:
+        for reward_type in REWARD_TYPES:
+            for task in TASKS:
+                print(f"\n{'=' * 60}\n {state_type} / {reward_type} / task{task}\n{'=' * 60}")
+                generate_datasets(state_type, reward_type, task - 1)

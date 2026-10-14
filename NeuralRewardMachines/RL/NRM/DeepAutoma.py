@@ -22,12 +22,16 @@ class ProbabilisticAutoma(nn.Module):
         self.numb_of_rewards = numb_of_rewards
         self.reward_values = torch.Tensor(list(range(numb_of_rewards)))
         self.activation = sftmx_with_temp
+        # normalized=True: automa probabilistico vero e proprio. Le righe di transizione e di
+        # reward vengono normalizzate con un softmax (quasi deterministiche con i pesi di
+        # initFromDfa), lo stato resta una distribuzione di probabilita' (nessun softmax extra)
+        # e pred_rew e' una distribuzione sulle classi di reward.
+        # normalized=False: comportamento originale (pesi grezzi + softmax sullo stato).
+        self.normalized = False
         #if initialization == "gaussian":
         #standard gaussian noise initialization
         self.trans_prob = torch.normal(0, 0.1, size=( numb_of_actions, numb_of_states, numb_of_states), requires_grad=False, device=device)
-        self.trans_prob = self.trans_prob.double()
         self.rew_matrix = torch.normal(0, 0.1, size=( numb_of_states, numb_of_rewards), requires_grad=False, device=device)
-        self.rew_matrix = self.rew_matrix.double()
         '''
         if initialization == "random_DFA":
             random_dfa = Random_DFA(self.numb_of_states, self.numb_of_actions)
@@ -43,16 +47,18 @@ class ProbabilisticAutoma(nn.Module):
     def forward(self, action_seq, temp, current_state= None):
         batch_size = action_seq.size()[0]
         length_size = action_seq.size()[1]
+        dtype = action_seq.dtype
+        seq_device = action_seq.device
 
-        pred_states = torch.zeros((batch_size, length_size, self.numb_of_states))
-        pred_rew = torch.zeros((batch_size, length_size, self.numb_of_rewards))
+        pred_states = torch.zeros((batch_size, length_size, self.numb_of_states), device=seq_device, dtype=dtype)
+        pred_rew = torch.zeros((batch_size, length_size, self.numb_of_rewards), device=seq_device, dtype=dtype)
 
         if current_state == None:
-            s = torch.zeros((batch_size,self.numb_of_states)).to(device)
+            s = torch.zeros((batch_size,self.numb_of_states), device=seq_device, dtype=dtype)
             #initial state is 0 for construction
             s[:,0] = 1.0
         else:
-            s = current_state
+            s = current_state.to(device=seq_device, dtype=dtype)
         #print("current state: ", s[0])
         for i in range(length_size):
             a = action_seq[:,i, :]
@@ -61,7 +67,8 @@ class ProbabilisticAutoma(nn.Module):
             s, r = self.step(s, a, temp)
             #print("Reward: ", r[0])
             #print("current state: ", s[0])
-            s = sftmx(s)
+            if not self.normalized:
+                s = sftmx(s)
             pred_states[:,i,:] = s
             pred_rew[:,i,:] = r
         #assert False
@@ -75,13 +82,17 @@ class ProbabilisticAutoma(nn.Module):
         #trans_prob = self.activation(self.trans_prob, temp)
         #rew_matrix = self.activation(self.rew_matrix, temp)
         #no activation
-        trans_prob = self.trans_prob
-        rew_matrix = self.rew_matrix
+        trans_prob = self.trans_prob.to(device=state.device)
+        rew_matrix = self.rew_matrix.to(device=state.device)
+        if self.normalized:
+            trans_prob = torch.softmax(trans_prob, dim=-1)
+            rew_matrix = torch.softmax(rew_matrix, dim=-1)
       
         trans_prob = trans_prob.unsqueeze(0)
-        state = state.unsqueeze(1).unsqueeze(-2)
+        state = state.to(dtype=trans_prob.dtype).unsqueeze(1).unsqueeze(-2)
+        action = action.to(device=trans_prob.device, dtype=trans_prob.dtype)
 
-        selected_prob = torch.matmul(state.double(), trans_prob)
+        selected_prob = torch.matmul(state, trans_prob)
 
         next_state = torch.matmul(action.unsqueeze(1), selected_prob.squeeze())
       

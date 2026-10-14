@@ -103,7 +103,7 @@ def transacc2pythomata(trans, acc, action_alphabet):
     return automaton
 
 
-def eval_acceptance(classifier, automa, alphabet, dataset, automa_implementation='dfa', temperature = 1.0, discretize_labels= False, mutually_exc_sym=True):
+def eval_acceptance(classifier, automa, alphabet, dataset, automa_implementation='dfa', temperature = 1.0, discretize_labels= False, mutually_exc_sym=True, lengths=None, return_balanced=False, return_counts=False):
     #automa implementation =
     #   - 'dfa' use the perfect dfa given
     #   - 'lstm' use the lstm model
@@ -113,10 +113,15 @@ def eval_acceptance(classifier, automa, alphabet, dataset, automa_implementation
     test_loss = 0
     classifier.eval()
     numb_of_symbols = len(alphabet)
+    # per-class counts, per calcolare la balanced accuracy (media delle recall per
+    # classe) quando le classi di reward sono molto sbilanciate (es. three_value,
+    # dove "vittoria" e' un evento rarissimo e l'accuracy grezza non e' informativa)
+    class_correct = {}
+    class_total = {}
     with torch.no_grad():
         for i in range(len(dataset[0])):
             image_sequences = dataset[0][i].to(device)
-            
+
             labels = dataset[1][i].to(device)
             batch_size = image_sequences.size()[0]
 
@@ -129,7 +134,7 @@ def eval_acceptance(classifier, automa, alphabet, dataset, automa_implementation
                 pixels_h = image_sequences.size()[4]
                 symbols = classifier(image_sequences.view(-1, num_channels, pixels_v, pixels_h))
             else:
-                symbols = classifier(image_sequences.view(-1, num_channels).double())
+                symbols = classifier(image_sequences.view(-1, num_channels).float())
             '''
             if discretize_labels:
                 symbols[:,0] = torch.where(symbols[:,0] > 0.5, 1., 0.)
@@ -153,12 +158,34 @@ def eval_acceptance(classifier, automa, alphabet, dataset, automa_implementation
               
             else:
                 print("INVALID AUTOMA IMPLEMENTATION: ", automa_implementation)
-        
-            total += labels.size()[0]
 
-          
-            correct += (output==labels).sum().item()
+            if lengths is not None:
+                len_i = lengths[i].to(device)
+                # esclude gli step di padding (ripetizione dell'ultimo step reale) dal conteggio
+                mask = (torch.arange(length_seq, device=device).unsqueeze(0) < len_i.unsqueeze(1)).reshape(-1)
+            else:
+                mask = torch.ones_like(labels, dtype=torch.bool)
+
+            total += mask.sum().item()
+            correct += ((output == labels) & mask).sum().item()
+
+            if return_balanced or return_counts:
+                for c in labels[mask].unique().tolist():
+                    class_mask = mask & (labels == c)
+                    class_total[c] = class_total.get(c, 0) + class_mask.sum().item()
+                    class_correct[c] = class_correct.get(c, 0) + ((output == labels) & class_mask).sum().item()
+
+        if return_counts:
+            # conteggi grezzi, per aggregare in modo esatto la valutazione fatta a blocchi
+            return {"correct": correct, "total": total, "class_correct": class_correct, "class_total": class_total}
+
         test_accuracy = 100. * correct/(float)(total)
+
+        if return_balanced:
+            recalls = [class_correct[c] / class_total[c] for c in class_total if class_total[c] > 0]
+            balanced_accuracy = 100. * sum(recalls) / len(recalls) if len(recalls) > 0 else 0.0
+            return test_accuracy, balanced_accuracy
+
     return test_accuracy
 
 
@@ -224,7 +251,7 @@ def eval_image_classification_from_traces(traces_images, traces_labels, classifi
                 pixels_v, pixels_h = list(batch_t_img.size())[3:]
                 pred_symbols = classifier(batch_t_img.view(-1, num_channels, pixels_v, pixels_h))
             else:
-                pred_symbols = classifier(batch_t_img.view(-1, num_channels).double())
+                pred_symbols = classifier(batch_t_img.view(-1, num_channels).float())
 
             gt_symbols = batch_t_sym.view(-1, batch_t_sym.size()[-1])
             if  not mutually_exclusive:

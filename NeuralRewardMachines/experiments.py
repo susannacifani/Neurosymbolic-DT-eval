@@ -39,7 +39,7 @@ def launch_experiments(path, formula, experiment, env_type, method):
     elif method == 'rm':
         use_dfa_state = True
 
-    env = GridWorldEnv(formula, "human", state_type=state_type, use_dfa_state=use_dfa_state, train=False)
+    env = GridWorldEnv(formula, "human", state_type=state_type, use_dfa_state=use_dfa_state, train=False, reward_type="three_value")
     if not os.path.exists(path):
         os.makedirs(path)
 

@@ -168,7 +168,7 @@ class DFA:
       s.view()
 
 class MooreMachine(DFA):
-    def __init__(self, arg1, arg2, arg3, reward="three_value_acceptance", dictionary_symbols=None):
+    def __init__(self, arg1, arg2, arg3, reward, dictionary_symbols=None):
         # Initialize the base DFA first
         super().__init__(arg1, arg2, arg3, dictionary_symbols)
         # Initialize rewards and compute them according to the chosen scheme
@@ -229,16 +229,16 @@ class MooreMachine(DFA):
                     self.rewards[s] = 0
         elif reward == "three_value_acceptance":
             for q in range(self.num_of_states):
-                #neutral states
-                if q not in self.absorbing_states:
-                    self.rewards[q] = 0
+                # winning: any accepting state, even if not absorbing. With a G(!x)
+                # clause the accepting state can still move to the failure sink,
+                # so it is never absorbing, but reaching it is a win.
+                if self.acceptance[q]:
+                    self.rewards[q] = 100
+                # failure: non-accepting state that can never be left
+                elif q in self.absorbing_states:
+                    self.rewards[q] = -100
                 else:
-                    #winning state
-                    if self.acceptance[q]:
-                        self.rewards[q] = 100
-                    #failure state
-                    else:
-                        self.rewards[q] = -100
+                    self.rewards[q] = 0
         else:
             raise Exception("Reward based on '{}' NOT IMPLEMENTED, choose between ['acceptance', 'three_value_acceptance', 'distance']".format(reward))
         

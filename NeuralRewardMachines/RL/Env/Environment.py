@@ -4,8 +4,17 @@ import pygame
 import random
 import numpy as np
 import torch, torchvision
-from FiniteStateMachine import MooreMachine
+
 import os
+import sys
+
+base = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+
+# 2. Aggiungiamo la cartella principale a quelle che Python conosce
+sys.path.append(base)
+
+from RL.Env.FiniteStateMachine import MooreMachine
+
 
 resize = torchvision.transforms.Resize((64,64))
 transforms = torchvision.transforms.Compose([
@@ -13,10 +22,16 @@ transforms = torchvision.transforms.Compose([
     resize,
 ])
 
+REWARD_SCHEMES = {"distance": "distance", "three_value": "three_value_acceptance"}
+
+
 class GridWorldEnv(gym.Env):
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 4}
 
-    def __init__(self, formula, render_mode="human", state_type = "symbolic", use_dfa_state=True, train=True, size=4):
+    def __init__(self, formula, render_mode="human", state_type = "symbolic", use_dfa_state=True, train=True, size=4, reward_type=None):
+        if reward_type not in REWARD_SCHEMES:
+            raise ValueError(f"reward_type must be one of {list(REWARD_SCHEMES)}, got {reward_type!r}")
+        self.reward_type = reward_type
         self.dictionary_symbols = ['P', 'L', 'D', 'G', 'E' ]
         self._PICKAXE = "RL/Env/imgs/pickaxe.png"
         self._GEM = "RL/Env/imgs/gem.png"
@@ -39,7 +54,7 @@ class GridWorldEnv(gym.Env):
         self.window = None
         self.clock = None
         self.formula = formula
-        self.automaton = MooreMachine(self.formula[0], self.formula[1], self.formula[2], dictionary_symbols=self.dictionary_symbols)
+        self.automaton = MooreMachine(self.formula[0], self.formula[1], self.formula[2], reward=REWARD_SCHEMES[reward_type], dictionary_symbols=self.dictionary_symbols)
 
         self.max_reward = 100 
         print("MAXIMUM REWARD:", self.max_reward)
@@ -91,7 +106,7 @@ class GridWorldEnv(gym.Env):
                     else:
                         obss = frame
 
-                    obss = torch.tensor(obss.copy(), dtype=torch.float64) / 255
+                    obss = torch.tensor(obss.copy(), dtype=torch.float32) / 255
                     obss = torch.permute(obss, (2, 0, 1))
                     obss = resize(obss)
                     self.image_locations[r,c] = obss

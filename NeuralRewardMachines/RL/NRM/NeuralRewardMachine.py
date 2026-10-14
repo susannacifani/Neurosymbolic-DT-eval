@@ -4,7 +4,7 @@ from PIL import Image
 import torch
 import pickle
 from .DeepAutoma import ProbabilisticAutoma
-from .NN_models import CNN_grounder, Linear_grounder
+from .NN_models import CNN_grounder, Linear_grounder_no_droput
 
 from statistics import mean
 from sklearn.model_selection import train_test_split
@@ -67,7 +67,7 @@ class NeuralRewardMachine:
             self.num_inputs = 2
             self.num_classes = 5
 
-            self.classifier = Linear_grounder(self.num_inputs, 8, self.num_classes)
+            self.classifier = Linear_grounder_no_droput(self.num_inputs, 128, self.num_classes)
 
         self.temperature = 1.0
         #questa resize si può togliere mi sà
@@ -96,10 +96,10 @@ class NeuralRewardMachine:
                                              [2,0],[2,1],[2,2],[2,3],
                                              [3,0],[3,1],[3,2],[3,3]]).unsqueeze(0)]
 
-        self.symbolic_grid = [torch.tensor([[0,0,0,0,1], [0,0,0,0,1], [0,0,0,0,1], [0,0,1,0,0],
+        self.symbolic_grid = [torch.tensor([[0,0,0,0,1], [0,0,0,0,1], [0,0,0,0,1], [0,0,0,1,0],
                                     [0,0,0,0,1], [1,0,0,0,0], [0,0,0,0,1], [0,0,0,0,1],
                                     [0,0,0,0,1], [0,0,0,0,1], [0,0,0,0,1], [0,0,0,0,1],
-                                    [0,0,0,1,0], [0,0,0,0,1], [0,0,0,0,1], [0,1,0,0,0]])]
+                                    [0,0,1,0,0], [0,0,0,0,1], [0,0,0,0,1], [0,1,0,0,0]])]
         #[0,0,0,0,1] white cell
         #[0,0,0,1,0] gem
         #[0,0,1,0,0] door
@@ -132,13 +132,17 @@ class NeuralRewardMachine:
     #     self.train_img_seq, self.train_traces, self.train_acceptance_img, self.test_img_seq_hard, self.test_traces, self.test_acceptance_img_hard = image_seq_dataset
     #     return
 
-    def set_dataset(self, image_traj, rew_traj):
-        
+    def set_dataset(self, image_traj, rew_traj, lengths=None):
+
         dataset_acceptances = torch.LongTensor(rew_traj)
-        dataset_traces = torch.stack([torch.stack(inner) for inner in image_traj])
+        # image_traj puo' essere gia' un tensore (traiettorie, passi, ...) oppure una lista di liste di tensori
+        dataset_traces = image_traj if torch.is_tensor(image_traj) else torch.stack([torch.stack(inner) for inner in image_traj])
+        dataset_lengths = torch.LongTensor(lengths) if lengths is not None else None
 
         image_seq_dataset = ([dataset_traces], [], [dataset_acceptances], [dataset_traces], [], [dataset_acceptances])
         self.train_img_seq, self.train_traces, self.train_acceptance_img, self.test_img_seq_hard, self.test_traces, self.test_acceptance_img_hard = image_seq_dataset
+        self.train_lengths = [dataset_lengths] if dataset_lengths is not None else None
+        self.test_lengths_hard = self.train_lengths
 
         return image_seq_dataset
 
@@ -183,17 +187,22 @@ class NeuralRewardMachine:
         '''
         self.classifier.to(device)
 
-        cross_entr = torch.nn.CrossEntropyLoss()
+        class_weights = getattr(self, 'class_weights', None)
+        if class_weights is not None:
+            cross_entr = torch.nn.CrossEntropyLoss(reduction='none', weight=class_weights.to(device))
+        else:
+            cross_entr = torch.nn.CrossEntropyLoss(reduction='none')
         print("_____________training the GROUNDER_____________")
         print("training on {} sequences using {} automaton states".format(tot_size, self.numb_of_states))
 
-        params = self.classifier.parameters()
-        if self.dataset == "minecraft_location":
-            optimizer = torch.optim.Adam(params, lr=0.005)#, weight_decay=1e-3)
-        else:
-            optimizer = torch.optim.Adam(params, lr=0.01)#, weight_decay=1e-3)
+        if not hasattr(self, 'optimizer'):
+            params = self.classifier.parameters()
+            if self.dataset == "minecraft_location":
+                self.optimizer = torch.optim.Adam(params, lr=0.001)#, weight_decay=1e-3)
+            else:
+                self.optimizer = torch.optim.Adam(params, lr=0.001)#, weight_decay=1e-3)
 
-        sheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, min_lr=1e-05)
+            self.sheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(self.optimizer, min_lr=1e-05)
 
         epoch = 0
         mean_loss = 1000000
@@ -207,6 +216,7 @@ class NeuralRewardMachine:
             epoch+=1
             losses = []
 
+            self.classifier.train()
             for b in range(len(self.train_img_seq)):
 
                 batch_img_seq = self.train_img_seq[b].to(device)
@@ -215,28 +225,60 @@ class NeuralRewardMachine:
                 length_seq = batch_img_seq.size()[1]
                 target_rew_seq = self.train_acceptance_img[b].type(torch.int64).to(device)
 
-                optimizer.zero_grad()
+                self.optimizer.zero_grad()
                 if self.dataset == 'minecraft_image':
-                    sym_sequences = self.classifier(batch_img_seq.view(-1, self.num_channels, self.pixels_v , self.pixels_h))
+                    flat_input = batch_img_seq.view(-1, self.num_channels, self.pixels_v, self.pixels_h)
                 else:
-                    sym_sequences = self.classifier(batch_img_seq.double())
+                    flat_input = batch_img_seq.float().view(-1, self.num_inputs)
 
-                sym_sequences = sym_sequences.view(batch_size, length_seq, self.numb_of_symbols)
+                lengths_b = self.train_lengths[b] if getattr(self, 'train_lengths', None) is not None else None
+                if lengths_b is not None:
+                    lengths_b = lengths_b.to(device)
+                    # il classifier vede solo gli step reali: gli step di padding (copie dell'ultimo
+                    # step) altrimenti entrano nelle statistiche della BatchNorm e le sbilanciano
+                    # verso le caselle finali. Ai passi di padding si ricopiano poi i simboli
+                    # dell'ultimo step reale, che e' la stessa osservazione.
+                    real = (torch.arange(length_seq, device=device).unsqueeze(0) < lengths_b.unsqueeze(1))
+                    sym_flat = torch.zeros(batch_size * length_seq, self.numb_of_symbols, device=device)
+                    sym_flat[real.reshape(-1)] = self.classifier(flat_input[real.reshape(-1)])
+                    last_real = torch.minimum(torch.arange(length_seq, device=device).unsqueeze(0), (lengths_b - 1).unsqueeze(1))
+                    sym_sequences = sym_flat.view(batch_size, length_seq, self.numb_of_symbols).gather(
+                        1, last_real.unsqueeze(-1).expand(-1, -1, self.numb_of_symbols))
+                else:
+                    sym_sequences = self.classifier(flat_input).view(batch_size, length_seq, self.numb_of_symbols)
 
                 pred_states, pred_rew = self.deepAutoma(sym_sequences, self.temperature)
 
                 pred_rew = pred_rew.view(-1, self.numb_of_rewards).to(device)
                 target_rew = target_rew_seq.view(-1)
-                loss = cross_entr(pred_rew, target_rew)
+                if self.deepAutoma.normalized:
+                    # pred_rew e' gia' una distribuzione: log-verosimiglianza della classe vera
+                    per_position_loss = torch.nn.functional.nll_loss(
+                        torch.log(pred_rew.clamp_min(1e-8)), target_rew, reduction='none',
+                        weight=class_weights.to(device) if class_weights is not None else None)
+                else:
+                    per_position_loss = cross_entr(pred_rew, target_rew)
+
+                if lengths_b is not None:
+                    # esclude gli step di padding (ripetizione dell'ultimo step reale) dalla loss,
+                    # cosi' il training si concentra sulla dinamica vera invece che su una
+                    # predizione gia' facile/ripetuta
+                    mask = (torch.arange(length_seq, device=device).unsqueeze(0) < lengths_b.unsqueeze(1)).reshape(-1)
+                    loss = (per_position_loss * mask).sum() / mask.sum()
+                else:
+                    loss = per_position_loss.mean()
 
                 loss.backward()
-                optimizer.step()
+                self.optimizer.step()
 
                 losses.append(loss.item())
             
             
             mean_loss_new = mean(losses)
-            sheduler.step(mean_loss_new)
+            # niente sheduler.step() qui: questa funzione viene chiamata una volta per batch/chunk
+            # (non una volta per epoch), farlo qui sovra-campiona lo scheduler di ~10x rispetto
+            # all'epoch reale e causa un collasso prematuro del learning rate. Lo step va fatto
+            # una sola volta per epoch, in A2C_nrm.py, sulla loss media dell'intero epoch.
 
             if mean_loss_new < 0.3 and abs(mean_loss_new - mean_loss) < 0.0001:
                 break
@@ -244,7 +286,7 @@ class NeuralRewardMachine:
                 break
             mean_loss = mean_loss_new
 
-            train_accuracy, test_accuracy_clss, test_accuracy_aut, test_accuracy_hard = self.eval_all(automa_implementation='logic_circuit', temperature=1, discretize_labels=True)
+            train_accuracy, test_accuracy_hard = self.eval_all(automa_implementation='logic_circuit', temperature=1, discretize_labels=True)
             if train_accuracy>= max_accuracy:
                 max_accuracy = train_accuracy
                 best_classifier = self.classifier
@@ -262,10 +304,10 @@ class NeuralRewardMachine:
             print("IMAGE CLASSIFICATION: train accuracy : {}\ttest accuracy : {}".format(train_image_classification_accuracy,test_image_classification_accuracy))
 
             mean_loss = mean_loss_new
-            sheduler.step(mean_loss)
         #write the accuracies of the last epoch
 
         self.classifier = best_classifier    
+        return mean_loss
 
 
     def train_DFA(self, batch_size, num_of_epochs, decay=0.999, freezed=False):
@@ -372,12 +414,22 @@ class NeuralRewardMachine:
 
         test_file_dfa.write("{}\n".format(test_accuracy))
 
-    def eval_all(self, automa_implementation, temperature, discretize_labels=False):
-        train_accuracy = eval_acceptance(self.classifier, self.deepAutoma, self.alphabet, (self.train_img_seq, self.train_acceptance_img), automa_implementation, temperature, discretize_labels=discretize_labels, mutually_exc_sym=True)
+    def eval_counts(self, automa_implementation, temperature, discretize_labels=False):
+        # conteggi (corretti/totali, anche per classe) sul dataset impostato con set_dataset
+        return eval_acceptance(self.classifier, self.deepAutoma, self.alphabet, (self.train_img_seq, self.train_acceptance_img), automa_implementation, temperature, discretize_labels=discretize_labels, mutually_exc_sym=True, lengths=getattr(self, 'train_lengths', None), return_counts=True)
 
-        test_accuracy_hard= eval_acceptance( self.classifier, self.deepAutoma, self.alphabet,(self.test_img_seq_hard, self.test_acceptance_img_hard), automa_implementation, temperature, discretize_labels=discretize_labels, mutually_exc_sym=True)
+    def eval_all(self, automa_implementation, temperature, discretize_labels=False, return_balanced=False):
+        # eval_acceptance esclude gia' il padding dal conteggio quando ha le lengths
+        if return_balanced:
+            train_accuracy, balanced_accuracy = eval_acceptance(self.classifier, self.deepAutoma, self.alphabet, (self.train_img_seq, self.train_acceptance_img), automa_implementation, temperature, discretize_labels=discretize_labels, mutually_exc_sym=True, lengths=getattr(self, 'train_lengths', None), return_balanced=True)
+        else:
+            train_accuracy = eval_acceptance(self.classifier, self.deepAutoma, self.alphabet, (self.train_img_seq, self.train_acceptance_img), automa_implementation, temperature, discretize_labels=discretize_labels, mutually_exc_sym=True, lengths=getattr(self, 'train_lengths', None))
 
-        return train_accuracy, 0,0, test_accuracy_hard
+        test_accuracy_hard = eval_acceptance( self.classifier, self.deepAutoma, self.alphabet,(self.test_img_seq_hard, self.test_acceptance_img_hard), automa_implementation, temperature, discretize_labels=discretize_labels, mutually_exc_sym=True, lengths=getattr(self, 'test_lengths_hard', None))
+
+        if return_balanced:
+            return train_accuracy, test_accuracy_hard, balanced_accuracy
+        return train_accuracy, test_accuracy_hard
 
     def eval_image_classification(self):
         train_acc = eval_image_classification_from_traces(self.custom_trace, self.symbolic_grid, self.classifier, True)

@@ -16,7 +16,7 @@ def pad_list(lst, l):
 
 def plot(source_1, source_2, task_category, destination, num_exp):
 
-    env = GridWorldEnv(formulas[0], "rgb_array", "symbolic", use_dfa_state=False, train=False)
+    env = GridWorldEnv(formulas[0], "rgb_array", "symbolic", use_dfa_state=False, train=False, reward_type="three_value")
     max_reward = env.max_reward
 
     results_1 = []
@@ -96,7 +96,7 @@ def triple_plot(
     """
 
     # environment / max reward as in your original code
-    env = GridWorldEnv(formulas[0], "rgb_array", "symbolic", use_dfa_state=False, train=False)
+    env = GridWorldEnv(formulas[0], "rgb_array", "symbolic", use_dfa_state=False, train=False, reward_type="three_value")
     max_reward = env.max_reward
 
     smooth_kernel = np.ones(smooth_window, dtype=float) / smooth_window
@@ -222,7 +222,7 @@ def plot_sequence(
         raise ValueError(f"Unknown category: {category}")
 
     # env / max_reward as in your original code
-    env = GridWorldEnv(formulas[0], "rgb_array", "symbolic", use_dfa_state=False, train=False)
+    env = GridWorldEnv(formulas[0], "rgb_array", "symbolic", use_dfa_state=False, train=False, reward_type="three_value")
     max_reward = env.max_reward
 
     smooth_kernel = np.ones(smooth_window, dtype=float) / smooth_window
