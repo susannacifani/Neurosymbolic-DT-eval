@@ -93,6 +93,8 @@ The reward is defined on the automaton state and given as the change in its valu
 
 ## 1. Dataset
 
+The ready-made datasets can be downloaded instead of generated: see [Large files](#large-files).
+
 ### Generation
 
 ```bash
@@ -252,7 +254,26 @@ To add a seed, set `SEEDS = [<seed>]` in the launcher: completed runs are skippe
 
 ## Large files
 
-Datasets (`*.h5`, about 0.5 GB symbolic and 93 GB image), trained models and logs are not stored on git (see `.gitignore`). The datasets can be regenerated with `Dataset/dataset_generation.py`, which reproduces the same trajectories.
+Datasets (`*.h5`, about 0.5 GB symbolic and 93 GB image), trained models and logs are not stored on git (see `.gitignore`).
+
+**Download the datasets** from Google Drive: <https://drive.google.com/drive/folders/1vBQvduY6Vnc7rrQoShhDYi_72Nc3YBfD?usp=sharing>
+
+| Archive | Content | Size |
+|---------|---------|------|
+| `Dataset_Symbolic.zip` | all symbolic datasets (`distance` and `three_value`) | ~22 MB |
+| `Dataset_Image_distance.zip` | image datasets, `distance` reward | ~6 GB |
+| `Dataset_Image_three_value.zip` | image datasets, `three_value` reward | ~6 GB |
+
+Extract the archives in the **repository root**. They already contain the `Dataset/...` folder structure, so the files end up where the scripts expect them:
+
+```bash
+unzip Dataset_Symbolic.zip                # -> Dataset/Symbolic/<reward>/task<N>/dataset_<dataset>.h5
+unzip Dataset_Image_distance.zip          # -> Dataset/Image/distance/task<N>/...
+unzip Dataset_Image_three_value.zip       # -> Dataset/Image/three_value/task<N>/...
+python3 Dataset/check_datasets.py         # optional: verify the files (ends with "TUTTO OK")
+```
+
+You only need the archives for the state type you want to use. Alternatively, the datasets can be regenerated with `Dataset/dataset_generation.py`, which reproduces exactly the same trajectories.
 
 ## Acknowledgements
 
