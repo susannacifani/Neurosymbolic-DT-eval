@@ -158,11 +158,11 @@ python3 DT/print_dt_table.py            # results table
 
 In `experiments_dt.py`, set `STATE_TYPES`, `REWARD_TYPES`, `TASKS`, `DATASETS` and `SEEDS`. With `OVERWRITE = False`, runs whose model or evaluation already exist are skipped, so an interrupted run can simply be relaunched.
 
-**Model.** GPT-style causal transformer over (return-to-go, state, action) tokens. It has 3 layers, 4 heads, hidden size 128 and dropout 0.1. The state encoder is a CNN for images and a linear layer for symbolic states. The context length is K = 50, which covers the whole episode.
+**Model.** GPT-style causal transformer over (return-to-go, state, action) tokens. It has 3 layers, 4 heads, hidden size 128 and dropout 0.1. The state encoder is a CNN for images and a learned embedding of the grid cell for symbolic states (one vector per cell, i.e. a one-hot input). A single linear layer on the (x, y) coordinates, the choice of the original paper for continuous state vectors, makes the 16 cells hard to tell apart: with a short context it fails on `medium_replay`, while the embedding does not. The context length is K = 50, which covers the whole episode.
 
-**Training.** Cross-entropy on the actions, with AdamW (lr 1e-4, weight decay 1e-4) and batch size 64 (symbolic) or 32 (image). The trajectories are split 80/20 into train and validation. Training uses early stopping on the validation loss (patience 10, at most 500 epochs), and the best model is kept.
+**Training.** Cross-entropy on the actions, with AdamW (lr 1e-4, weight decay 1e-4) and batch size 64 (the same for symbolic and image). The trajectories are split 80/20 into train and validation. Training uses early stopping on the validation loss (patience 10, at most 500 epochs), and the best model is kept.
 
-**Evaluation.** One deterministic episode from each of the 12 start cells. The target return is the maximum (100) and episodes are capped at 100 steps. Each episode ends in success, failure or timeout, read from the automaton state.
+**Evaluation.** One deterministic episode from each of the 12 start cells. The target return is the maximum (100) and episodes are capped at 50 steps (the environment limit). Each episode ends in success, failure or timeout, read from the automaton state.
 
 **Output**, in `DT/<State>/<reward>/task<N>/seed<S>/`:
 

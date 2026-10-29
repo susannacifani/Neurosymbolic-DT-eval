@@ -4,17 +4,32 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-# Uso (dalla cartella NRM): python3 DT/print_dt_table.py [metrica] [seed]
+# Uso: imposta la CONFIGURAZIONE qui sotto e premi Run.
+# (In alternativa da terminale, gli argomenti sostituiscono la configurazione:
+#  python3 DT/print_dt_table.py [metrica] [seed] [K=<k>])
 #   metrica:  all        (default) - Reward, CDR e SR insieme, un blocco per configurazione
 #             reward                - Reward: reward media dell'episodio (non scontata)
 #             discounted            - CDR: cumulative discounted reward media (gamma = 0.99)
 #             success               - SR: success rate in ambiente (%)
 #             length                - lunghezza media dell'episodio (passi)
 #   seed:     es. 0,1,2 (default: tutti i seed trovati)
+#   K=<k>     opzionale, in qualsiasi posizione: risultati dell'ablation sul contesto
+#             (DT/context_ablation/K<k>/..., da experiments_dt_context.py) invece di quelli
+#             principali (K = 50). Es.: python3 DT/print_dt_table.py all 0 K=10
 #
 # Per ogni combinazione la metrica si calcola sul CSV di valutazione di ogni seed
-# (DT/<State>/<reward>/task<N>/seed<S>/eval/eval_<dataset>.csv, 12 episodi = 12 partenze)
+# (DT/<State>/<reward>/task<N>/seed<S>/eval/eval_<dataset>.csv, 500 episodi su disposizioni di test diverse)
 # e si riporta media +- deviazione standard tra i seed. Con un solo seed c'e' solo la media.
+
+# =====================================================================
+# CONFIGURAZIONE: modifica qui cosa stampare, poi premi Run
+# =====================================================================
+METRIC_DEFAULT = "all"   # "all", "success", "discounted", "reward" o "length"
+SEEDS_DEFAULT = None     # es. [0] oppure [0, 1, 2]; None = tutti i seed trovati
+K_DEFAULT = None         # None = risultati principali (K = 50); es. 5 = ablation con K = 5
+AUTOMATON_DEFAULT = None # None = DT normale; "true" = DT con lo stato vero dell'automa; "grounder" = dal grounder
+                         # (DT/automaton_state/true/K<k>/..., da experiments_dt_automaton.py)
+# =====================================================================
 
 METRICS = {
     "reward": ("reward media dell'episodio", lambda df: df["reward_puro"].mean()),
@@ -22,13 +37,22 @@ METRICS = {
     "length": ("lunghezza media dell'episodio (passi)", lambda df: df["episode_length"].mean()),
     "discounted": ("reward scontata media (gamma 0.99)", lambda df: df["discounted_reward"].mean()),
 }
-METRIC = sys.argv[1] if len(sys.argv) > 1 else "all"
+# argomenti da terminale (se ci sono) al posto della configurazione; K=<k> in qualsiasi posizione
+K_ARG = next((a for a in sys.argv[1:] if a.startswith("K=")), None)
+ARGS = [a for a in sys.argv[1:] if not a.startswith("K=")]
+METRIC = ARGS[0] if len(ARGS) > 0 else METRIC_DEFAULT
+K = int(K_ARG[2:]) if K_ARG else K_DEFAULT
 # metriche della vista "all", con l'etichetta della colonna
 ALL_METRICS = [("reward", "Reward"), ("discounted", "CDR"), ("success", "SR")]
 COL_GAP = 2     # spazi tra le colonne di uno stesso dataset
 GROUP_GAP = 4   # spazi tra un dataset e l'altro (expert / medium / replay)
 
 DT_ROOT = Path(__file__).resolve().parent
+AUTOMATON = AUTOMATON_DEFAULT
+if AUTOMATON is not None:
+    DT_ROOT = DT_ROOT / "automaton_state" / AUTOMATON / f"K{K if K is not None else 50}"
+elif K is not None:
+    DT_ROOT = DT_ROOT / "context_ablation" / f"K{K}"
 STATE_TYPES = ["Symbolic", "Image"]
 REWARD_TYPES = ["three_value", "distance"]
 DATASETS = [("medium_expert", "expert"), ("medium", "medium"), ("medium_replay", "replay")]
@@ -39,7 +63,10 @@ def find_seeds():
     return sorted({int(p.name[4:]) for p in DT_ROOT.glob("*/*/task*/seed*") if p.name[4:].isdigit()})
 
 
-SEEDS = [int(s) for s in sys.argv[2].split(",")] if len(sys.argv) > 2 else find_seeds()
+if len(ARGS) > 1:
+    SEEDS = [int(s) for s in ARGS[1].split(",")]
+else:
+    SEEDS = list(SEEDS_DEFAULT) if SEEDS_DEFAULT is not None else find_seeds()
 
 
 def cell(state_type, reward_type, task, dataset, metric=None):
@@ -145,8 +172,11 @@ def main():
     pd.set_option("display.expand_frame_repr", False)
 
     title = "Reward / CDR / SR" if METRIC == "all" else METRICS[METRIC][0]
-    print(f"DECISION TRANSFORMER - {title} - seed {', '.join(map(str, SEEDS))}")
-    print("In ogni cella: media ± deviazione standard tra i seed (12 episodi per seed, uno per partenza)")
+    context = f"K = {K} (ablation)" if K is not None else "K = 50"
+    if AUTOMATON is not None:
+        context = f"K = {K if K is not None else 50} + stato dell'automa ({AUTOMATON})"
+    print(f"DECISION TRANSFORMER - {title} - {context} - seed {', '.join(map(str, SEEDS))}")
+    print("In ogni cella: media ± deviazione standard tra i seed (500 episodi per seed, ognuno su una disposizione di test diversa)")
     if METRIC == "all":
         print("Reward = reward media dell'episodio | CDR = cumulative discounted reward (gamma 0.99) | SR = success rate (0-100)")
     incomplete = [k for k, n in count_runs().items() if 0 < n < len(SEEDS)]

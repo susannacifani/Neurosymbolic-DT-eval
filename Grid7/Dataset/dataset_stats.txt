@@ -1,0 +1,1559 @@
+
+====================================================================================================
+ task1 / medium_expert   (task1: visit(pickaxe, lava))
+====================================================================================================
+Traiettorie: 5000 | optimal: 2500, noisy: 2500 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  optimal   2500     2500 (100.0%)      0 (  0.0%)      0 (  0.0%)
+  noisy     2500     2490 ( 99.6%)      0 (  0.0%)     10 (  0.4%)
+  totale    5000     4990 ( 99.8%)      0 (  0.0%)     10 (  0.2%)
+  passi (azioni) totali: 74456 | passi in cui arriva il reward di vittoria: 6.7% | di fallimento: 0.0%
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  optimal     5.7        6    2   12     9
+  noisy      24.1       20    2  100    56
+  totale     14.9        8    2  100    47
+
+PROGRESSO E OGGETTI
+  optimal  entrate su oggetti per traiettoria:   2.3 | tipi di oggetto toccati: 2.31 | compito completato da chi non vince: -
+  noisy    entrate su oggetti per traiettoria:   4.9 | tipi di oggetto toccati: 2.79 | compito completato da chi non vince:  40.0% in media (10 traiettorie)
+  totale   entrate su oggetti per traiettoria:   3.6 | tipi di oggetto toccati: 2.55 | compito completato da chi non vince:  40.0% in media (10 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  optimal   100.0%    100.00 ±   0.00     95.41 ±   1.80
+  noisy      99.6%     99.60 ±   6.31     80.17 ±  12.73
+  totale     99.8%     99.80 ±   4.47     87.79 ±  11.86
+  passi (azioni) con reward: positivo 6.7%, negativo 0.0%, nullo 93.3%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  optimal   100.0%    100.00 ±   0.00     96.83 ±   1.46
+  noisy      99.6%     99.76 ±   3.99     85.89 ±   9.55
+  totale     99.8%     99.88 ±   2.83     91.36 ±   8.75
+  passi (azioni) con reward: positivo 13.4%, negativo 0.0%, nullo 86.6%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  optimal:
+      2:69      3:230     4:408     5:494     6:513     7:350     8:232     9:132    10:52     11:17     12:3   
+  noisy:
+      2:16      3:32      4:36      5:43      6:60      7:73      8:60      9:75     10:75     11:95     12:94     13:94  
+     14:81     15:84     16:77     17:78     18:75     19:77     20:52     21:71     22:67     23:70     24:55     25:43  
+     26:65     27:48     28:47     29:42     30:41     31:41     32:37     33:34     34:36     35:33     36:30     37:32  
+     38:23     39:30     40:21     41:10     42:24     43:22     44:16     45:17     46:14     47:17     48:16     49:16  
+     50:20     51:12     52:7      53:13     54:9      55:12     56:7      57:8      58:9      59:6      60:6      61:6   
+     62:6      63:4      64:5      65:4      66:3      67:5      68:3      69:5      70:3      71:6      72:3      73:5   
+     75:2      76:3      77:2      79:1      80:2      81:3      82:2      83:2      84:1      86:1      88:3      89:3   
+     93:1      94:1     100:11  
+
+====================================================================================================
+ task1 / medium   (task1: visit(pickaxe, lava))
+====================================================================================================
+Traiettorie: 5000 | noisy: 5000 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  noisy     5000     4991 ( 99.8%)      0 (  0.0%)      9 (  0.2%)
+  totale    5000     4991 ( 99.8%)      0 (  0.0%)      9 (  0.2%)
+  passi (azioni) totali: 119523 | passi in cui arriva il reward di vittoria: 4.2% | di fallimento: 0.0%
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  noisy      23.9       20    2  100    55
+  totale     23.9       20    2  100    55
+
+PROGRESSO E OGGETTI
+  noisy    entrate su oggetti per traiettoria:   4.8 | tipi di oggetto toccati: 2.77 | compito completato da chi non vince:  50.0% in media (9 traiettorie)
+  totale   entrate su oggetti per traiettoria:   4.8 | tipi di oggetto toccati: 2.77 | compito completato da chi non vince:  50.0% in media (9 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      99.8%     99.82 ±   4.24     80.32 ±  12.04
+  totale     99.8%     99.82 ±   4.24     80.32 ±  12.04
+  passi (azioni) con reward: positivo 4.2%, negativo 0.0%, nullo 95.8%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      99.8%     99.91 ±   2.12     86.10 ±   9.00
+  totale     99.8%     99.91 ±   2.12     86.10 ±   9.00
+  passi (azioni) con reward: positivo 8.4%, negativo 0.0%, nullo 91.6%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  noisy:
+      2:24      3:65      4:74      5:113     6:132     7:109     8:136     9:159    10:181    11:164    12:158    13:150 
+     14:172    15:164    16:152    17:160    18:154    19:144    20:124    21:139    22:137    23:121    24:123    25:97  
+     26:102    27:108    28:91     29:93     30:79     31:87     32:81     33:88     34:82     35:54     36:62     37:50  
+     38:49     39:55     40:56     41:43     42:49     43:47     44:41     45:23     46:33     47:30     48:30     49:23  
+     50:38     51:25     52:19     53:18     54:25     55:18     56:22     57:24     58:22     59:11     60:8      61:13  
+     62:10     63:8      64:12     65:7      66:6      67:6      68:6      69:9      70:10     71:5      72:9      73:2   
+     74:7      75:5      76:6      77:3      78:3      79:4      80:1      81:3      82:1      83:2      84:1      85:4   
+     86:1      87:1      88:1      90:1      92:1      93:2      96:1      98:1      99:1     100:9   
+
+====================================================================================================
+ task1 / medium_replay   (task1: visit(pickaxe, lava))
+====================================================================================================
+Traiettorie: 5000 | noisy: 2500, random: 2500 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  noisy     2500     2495 ( 99.8%)      0 (  0.0%)      5 (  0.2%)
+  random    2500     1723 ( 68.9%)      0 (  0.0%)    777 ( 31.1%)
+  totale    5000     4218 ( 84.4%)      0 (  0.0%)    782 ( 15.6%)
+  passi (azioni) totali: 219839 | passi in cui arriva il reward di vittoria: 1.9% | di fallimento: 0.0%
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  noisy      24.0       21    2  100    55
+  random     63.9       65    2  100   100
+  totale     44.0       33    2  100   100
+
+PROGRESSO E OGGETTI
+  noisy    entrate su oggetti per traiettoria:   4.9 | tipi di oggetto toccati: 2.80 | compito completato da chi non vince:  50.0% in media (5 traiettorie)
+  random   entrate su oggetti per traiettoria:   9.3 | tipi di oggetto toccati: 2.90 | compito completato da chi non vince:  43.8% in media (777 traiettorie)
+  totale   entrate su oggetti per traiettoria:   7.1 | tipi di oggetto toccati: 2.85 | compito completato da chi non vince:  43.9% in media (782 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      99.8%     99.80 ±   4.47     80.23 ±  12.20
+  random     68.9%     68.92 ±  46.28     44.59 ±  32.86
+  totale     84.4%     84.36 ±  36.32     62.41 ±  30.53
+  passi (azioni) con reward: positivo 1.9%, negativo 0.0%, nullo 98.1%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      99.8%     99.90 ±   2.23     85.91 ±   9.12
+  random     68.9%     82.54 ±  27.57     61.93 ±  23.66
+  totale     84.4%     91.22 ±  21.40     73.92 ±  21.57
+  passi (azioni) con reward: positivo 4.1%, negativo 0.0%, nullo 95.9%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  noisy:
+      2:18      3:26      4:50      5:45      6:77      7:65      8:64      9:64     10:80     11:91     12:83     13:75  
+     14:74     15:64     16:90     17:72     18:69     19:71     20:66     21:74     22:76     23:67     24:84     25:56  
+     26:43     27:43     28:45     29:41     30:49     31:40     32:41     33:35     34:31     35:23     36:22     37:28  
+     38:29     39:22     40:28     41:28     42:17     43:24     44:17     45:17     46:19     47:23     48:17     49:22  
+     50:13     51:14     52:14     53:12     54:10     55:11     56:6      57:12     58:12     59:5      60:7      61:5   
+     62:2      63:5      64:8      65:3      66:4      67:4      68:5      69:3      70:2      71:2      72:2      73:5   
+     74:3      75:2      76:2      77:3      78:1      79:1      82:1      84:1      85:1      86:1      89:1      90:2   
+     91:3      97:1      98:1     100:5   
+  random:
+      2:7       3:9       4:8       5:9       6:21      7:11      8:19      9:23     10:16     11:19     12:14     13:18  
+     14:18     15:12     16:20     17:16     18:22     19:12     20:17     21:17     22:24     23:29     24:13     25:22  
+     26:22     27:29     28:22     29:25     30:20     31:26     32:19     33:21     34:15     35:23     36:25     37:24  
+     38:17     39:31     40:32     41:30     42:20     43:26     44:25     45:27     46:23     47:17     48:37     49:23  
+     50:21     51:15     52:21     53:26     54:14     55:17     56:22     57:16     58:17     59:21     60:11     61:18  
+     62:20     63:13     64:16     65:18     66:20     67:17     68:17     69:12     70:13     71:12     72:12     73:13  
+     74:19     75:8      76:12     77:13     78:13     79:16     80:12     81:14     82:17     83:14     84:14     85:7   
+     86:16     87:12     88:11     89:15     90:15     91:15     92:14     93:12     94:15     95:11     96:15     97:7   
+     98:11     99:13    100:782 
+
+====================================================================================================
+ task2 / medium_expert   (task2: visit(pickaxe, lava, door))
+====================================================================================================
+Traiettorie: 5000 | optimal: 2500, noisy: 2500 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  optimal   2500     2500 (100.0%)      0 (  0.0%)      0 (  0.0%)
+  noisy     2500     2489 ( 99.6%)      0 (  0.0%)     11 (  0.4%)
+  totale    5000     4989 ( 99.8%)      0 (  0.0%)     11 (  0.2%)
+  passi (azioni) totali: 95918 | passi in cui arriva il reward di vittoria: 5.2% | di fallimento: 0.0%
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  optimal     7.4        7    3   16    11
+  noisy      30.9       27    3  100    66
+  totale     19.2       10    3  100    55
+
+PROGRESSO E OGGETTI
+  optimal  entrate su oggetti per traiettoria:   3.3 | tipi di oggetto toccati: 3.20 | compito completato da chi non vince: -
+  noisy    entrate su oggetti per traiettoria:   6.7 | tipi di oggetto toccati: 3.46 | compito completato da chi non vince:  60.6% in media (11 traiettorie)
+  totale   entrate su oggetti per traiettoria:   5.0 | tipi di oggetto toccati: 3.33 | compito completato da chi non vince:  60.6% in media (11 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  optimal   100.0%    100.00 ±   0.00     93.76 ±   1.76
+  noisy      99.6%     99.56 ±   6.62     74.96 ±  12.89
+  totale     99.8%     99.78 ±   4.69     84.36 ±  13.15
+  passi (azioni) con reward: positivo 5.2%, negativo 0.0%, nullo 94.8%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  optimal   100.0%    100.00 ±   0.00     96.15 ±   1.34
+  noisy      99.6%     99.83 ±   2.74     84.49 ±   8.37
+  totale     99.8%     99.91 ±   1.94     90.32 ±   8.36
+  passi (azioni) con reward: positivo 15.6%, negativo 0.0%, nullo 84.4%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  optimal:
+      3:23      4:104     5:246     6:445     7:487     8:503     9:342    10:220    11:94     12:23     13:11     14:1   
+     16:1   
+  noisy:
+      3:1       4:4       5:9       6:20      7:14      8:29      9:40     10:45     11:52     12:50     13:54     14:79  
+     15:68     16:71     17:65     18:62     19:72     20:75     21:70     22:70     23:76     24:79     25:63     26:64  
+     27:56     28:54     29:60     30:49     31:61     32:49     33:55     34:51     35:37     36:43     37:39     38:25  
+     39:38     40:35     41:40     42:27     43:22     44:32     45:32     46:30     47:28     48:21     49:20     50:29  
+     51:14     52:22     53:21     54:18     55:14     56:19     57:14     58:9      59:15     60:10     61:12     62:18  
+     63:8      64:5      65:4      66:8      67:8      68:7      69:4      70:9      71:4      72:6      73:7      74:3   
+     75:11     76:7      77:8      78:1      79:6      80:2      81:1      82:3      83:4      84:1      85:2      86:4   
+     87:2      89:2      91:2      92:3      93:1      95:3      97:1      99:1     100:11  
+
+====================================================================================================
+ task2 / medium   (task2: visit(pickaxe, lava, door))
+====================================================================================================
+Traiettorie: 5000 | noisy: 5000 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  noisy     5000     4978 ( 99.6%)      0 (  0.0%)     22 (  0.4%)
+  totale    5000     4978 ( 99.6%)      0 (  0.0%)     22 (  0.4%)
+  passi (azioni) totali: 154863 | passi in cui arriva il reward di vittoria: 3.2% | di fallimento: 0.0%
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  noisy      31.0       27    3  100    65
+  totale     31.0       27    3  100    65
+
+PROGRESSO E OGGETTI
+  noisy    entrate su oggetti per traiettoria:   6.7 | tipi di oggetto toccati: 3.46 | compito completato da chi non vince:  65.2% in media (22 traiettorie)
+  totale   entrate su oggetti per traiettoria:   6.7 | tipi di oggetto toccati: 3.46 | compito completato da chi non vince:  65.2% in media (22 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      99.6%     99.56 ±   6.62     74.91 ±  12.81
+  totale     99.6%     99.56 ±   6.62     74.91 ±  12.81
+  passi (azioni) con reward: positivo 3.2%, negativo 0.0%, nullo 96.8%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      99.6%     99.85 ±   2.35     84.77 ±   8.22
+  totale     99.6%     99.85 ±   2.35     84.77 ±   8.22
+  passi (azioni) con reward: positivo 9.7%, negativo 0.0%, nullo 90.3%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  noisy:
+      3:6       4:17      5:22      6:37      7:36      8:60      9:72     10:75     11:108    12:98     13:113    14:135 
+     15:116    16:127    17:134    18:139    19:147    20:128    21:157    22:141    23:144    24:127    25:140    26:144 
+     27:139    28:112    29:105    30:103    31:96     32:102    33:93     34:114    35:75     36:103    37:97     38:72  
+     39:68     40:72     41:62     42:75     43:77     44:56     45:59     46:65     47:59     48:37     49:47     50:44  
+     51:28     52:43     53:37     54:36     55:28     56:24     57:36     58:22     59:24     60:24     61:23     62:18  
+     63:22     64:20     65:11     66:13     67:13     68:20     69:18     70:10     71:11     72:7      73:13     74:10  
+     75:14     76:8      77:6      78:4      79:4      80:8      81:6      82:11     83:5      84:4      85:4      86:1   
+     87:2      88:7      89:3      90:2      91:4      92:4      93:1      95:2      96:3      97:1      98:4      99:3   
+    100:23  
+
+====================================================================================================
+ task2 / medium_replay   (task2: visit(pickaxe, lava, door))
+====================================================================================================
+Traiettorie: 5000 | noisy: 2500, random: 2500 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  noisy     2500     2493 ( 99.7%)      0 (  0.0%)      7 (  0.3%)
+  random    2500     1411 ( 56.4%)      0 (  0.0%)   1089 ( 43.6%)
+  totale    5000     3904 ( 78.1%)      0 (  0.0%)   1096 ( 21.9%)
+  passi (azioni) totali: 262232 | passi in cui arriva il reward di vittoria: 1.5% | di fallimento: 0.0%
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  noisy      29.8       26    3  100    63
+  random     75.0       89    4  100   100
+  totale     52.4       43    3  100   100
+
+PROGRESSO E OGGETTI
+  noisy    entrate su oggetti per traiettoria:   6.5 | tipi di oggetto toccati: 3.45 | compito completato da chi non vince:  66.7% in media (7 traiettorie)
+  random   entrate su oggetti per traiettoria:  11.4 | tipi di oggetto toccati: 3.17 | compito completato da chi non vince:  58.9% in media (1089 traiettorie)
+  totale   entrate su oggetti per traiettoria:   9.0 | tipi di oggetto toccati: 3.31 | compito completato da chi non vince:  58.9% in media (1096 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      99.7%     99.72 ±   5.28     75.74 ±  12.26
+  random     56.4%     56.44 ±  49.58     33.52 ±  31.37
+  totale     78.1%     78.08 ±  41.37     54.63 ±  31.83
+  passi (azioni) con reward: positivo 1.5%, negativo 0.0%, nullo 98.5%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      99.7%     99.91 ±   1.76     85.24 ±   7.96
+  random     56.4%     82.08 ±  22.78     61.69 ±  19.59
+  totale     78.1%     90.99 ±  18.45     73.47 ±  19.03
+  passi (azioni) con reward: positivo 5.2%, negativo 0.0%, nullo 94.8%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  noisy:
+      3:4       4:4       5:15      6:16      7:32      8:34      9:37     10:36     11:43     12:59     13:56     14:66  
+     15:82     16:79     17:72     18:70     19:78     20:65     21:83     22:70     23:67     24:58     25:73     26:70  
+     27:67     28:53     29:56     30:61     31:47     32:59     33:55     34:42     35:39     36:53     37:38     38:38  
+     39:46     40:31     41:30     42:28     43:23     44:33     45:24     46:28     47:18     48:24     49:18     50:23  
+     51:16     52:17     53:20     54:12     55:13     56:13     57:15     58:13     59:9      60:14     61:16     62:13  
+     63:10     64:4      65:9      66:8      67:11     68:11     69:2      70:6      71:2      72:4      73:4      74:7   
+     75:3      76:2      77:3      78:1      79:4      80:4      81:4      82:3      83:2      84:1      86:2      87:1   
+     88:1      89:1      90:1      92:2      97:1      99:3     100:9   
+  random:
+      4:2       5:1       6:4       7:1       8:2       9:3      10:2      11:3      12:2      13:7      14:4      15:11  
+     16:9      17:11     18:9      19:4      20:12     21:14     22:21     23:22     24:25     25:12     26:17     27:15  
+     28:21     29:18     30:18     31:22     32:10     33:15     34:25     35:18     36:15     37:17     38:10     39:21  
+     40:19     41:12     42:22     43:17     44:15     45:23     46:18     47:11     48:14     49:25     50:17     51:16  
+     52:18     53:19     54:20     55:22     56:16     57:20     58:16     59:22     60:22     61:18     62:18     63:16  
+     64:18     65:15     66:9      67:22     68:16     69:28     70:8      71:13     72:16     73:19     74:13     75:14  
+     76:15     77:18     78:19     79:11     80:14     81:16     82:17     83:14     84:7      85:12     86:16     87:18  
+     88:12     89:18     90:17     91:13     92:19     93:17     94:13     95:15     96:13     97:8      98:16     99:11  
+    100:1101
+
+====================================================================================================
+ task3 / medium_expert   (task3: seq_visit(pickaxe, lava))
+====================================================================================================
+Traiettorie: 5000 | optimal: 2500, noisy: 2500 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  optimal   2500     2500 (100.0%)      0 (  0.0%)      0 (  0.0%)
+  noisy     2500     2483 ( 99.3%)      0 (  0.0%)     17 (  0.7%)
+  totale    5000     4983 ( 99.7%)      0 (  0.0%)     17 (  0.3%)
+  passi (azioni) totali: 87178 | passi in cui arriva il reward di vittoria: 5.7% | di fallimento: 0.0%
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  optimal     6.6        6    2   16    11
+  noisy      28.2       24    2  100    65
+  totale     17.4        9    2  100    53
+
+PROGRESSO E OGGETTI
+  optimal  entrate su oggetti per traiettoria:   2.5 | tipi di oggetto toccati: 2.35 | compito completato da chi non vince: -
+  noisy    entrate su oggetti per traiettoria:   5.8 | tipi di oggetto toccati: 2.85 | compito completato da chi non vince:  35.3% in media (17 traiettorie)
+  totale   entrate su oggetti per traiettoria:   4.2 | tipi di oggetto toccati: 2.60 | compito completato da chi non vince:  35.3% in media (17 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  optimal   100.0%    100.00 ±   0.00     94.52 ±   2.20
+  noisy      99.3%     99.32 ±   8.22     77.04 ±  14.07
+  totale     99.7%     99.66 ±   5.82     85.78 ±  13.34
+  passi (azioni) con reward: positivo 5.7%, negativo 0.0%, nullo 94.3%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  optimal   100.0%    100.00 ±   0.00     95.94 ±   1.87
+  noisy      99.3%     99.56 ±   5.64     82.15 ±  11.96
+  totale     99.7%     99.78 ±   3.99     89.04 ±  10.99
+  passi (azioni) con reward: positivo 11.4%, negativo 0.0%, nullo 88.6%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  optimal:
+      2:40      3:155     4:258     5:388     6:422     7:422     8:323     9:220    10:126    11:68     12:39     13:22  
+     14:9      15:7      16:1   
+  noisy:
+      2:7       3:24      4:31      5:32      6:47      7:57      8:46      9:63     10:52     11:64     12:71     13:58  
+     14:74     15:60     16:68     17:76     18:71     19:61     20:56     21:62     22:55     23:70     24:68     25:43  
+     26:48     27:64     28:59     29:44     30:45     31:41     32:47     33:56     34:49     35:39     36:41     37:36  
+     38:31     39:32     40:33     41:36     42:37     43:23     44:16     45:23     46:22     47:22     48:16     49:16  
+     50:21     51:18     52:10     53:16     54:15     55:14     56:11     57:11     58:8      59:15     60:6      61:7   
+     62:12     63:8      64:7      65:9      66:5      67:2      68:5      69:10     70:5      71:6      72:4      73:5   
+     74:4      75:6      76:2      77:3      78:4      79:7      80:2      81:4      82:3      83:2      84:2      85:2   
+     86:4      87:2      88:1      89:1      90:1      91:2      94:2      95:2      96:1      99:2     100:19  
+
+====================================================================================================
+ task3 / medium   (task3: seq_visit(pickaxe, lava))
+====================================================================================================
+Traiettorie: 5000 | noisy: 5000 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  noisy     5000     4978 ( 99.6%)      0 (  0.0%)     22 (  0.4%)
+  totale    5000     4978 ( 99.6%)      0 (  0.0%)     22 (  0.4%)
+  passi (azioni) totali: 143420 | passi in cui arriva il reward di vittoria: 3.5% | di fallimento: 0.0%
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  noisy      28.7       24    2  100    65
+  totale     28.7       24    2  100    65
+
+PROGRESSO E OGGETTI
+  noisy    entrate su oggetti per traiettoria:   5.9 | tipi di oggetto toccati: 2.87 | compito completato da chi non vince:  47.7% in media (22 traiettorie)
+  totale   entrate su oggetti per traiettoria:   5.9 | tipi di oggetto toccati: 2.87 | compito completato da chi non vince:  47.7% in media (22 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      99.6%     99.56 ±   6.62     76.78 ±  13.68
+  totale     99.6%     99.56 ±   6.62     76.78 ±  13.68
+  passi (azioni) con reward: positivo 3.5%, negativo 0.0%, nullo 96.5%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      99.6%     99.77 ±   3.53     82.05 ±  11.41
+  totale     99.6%     99.77 ±   3.53     82.05 ±  11.41
+  passi (azioni) con reward: positivo 7.0%, negativo 0.0%, nullo 93.0%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  noisy:
+      2:14      3:27      4:50      5:59      6:78      7:109     8:116     9:110    10:120    11:125    12:127    13:133 
+     14:132    15:134    16:127    17:127    18:145    19:142    20:106    21:131    22:136    23:112    24:153    25:120 
+     26:109    27:124    28:111    29:95     30:90     31:77     32:93     33:84     34:72     35:70     36:67     37:76  
+     38:60     39:66     40:60     41:69     42:53     43:58     44:46     45:49     46:45     47:41     48:38     49:43  
+     50:40     51:36     52:29     53:38     54:25     55:30     56:23     57:33     58:20     59:21     60:25     61:22  
+     62:29     63:19     64:21     65:21     66:12     67:17     68:8      69:14     70:12     71:13     72:11     73:9   
+     74:7      75:12     76:2      77:8      78:8      79:6      80:3      81:5      82:11     83:4      84:6      85:6   
+     86:1      87:7      88:4      89:8      90:3      91:6      92:3      93:2      94:2      95:3      97:1     100:25  
+
+====================================================================================================
+ task3 / medium_replay   (task3: seq_visit(pickaxe, lava))
+====================================================================================================
+Traiettorie: 5000 | noisy: 2500, random: 2500 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  noisy     2500     2488 ( 99.5%)      0 (  0.0%)     12 (  0.5%)
+  random    2500     1371 ( 54.8%)      0 (  0.0%)   1129 ( 45.2%)
+  totale    5000     3859 ( 77.2%)      0 (  0.0%)   1141 ( 22.8%)
+  passi (azioni) totali: 255950 | passi in cui arriva il reward di vittoria: 1.5% | di fallimento: 0.0%
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  noisy      28.4       24    2  100    64
+  random     74.0       90    2  100   100
+  totale     51.2       41    2  100   100
+
+PROGRESSO E OGGETTI
+  noisy    entrate su oggetti per traiettoria:   5.8 | tipi di oggetto toccati: 2.85 | compito completato da chi non vince:  41.7% in media (12 traiettorie)
+  random   entrate su oggetti per traiettoria:  11.2 | tipi di oggetto toccati: 3.02 | compito completato da chi non vince:  29.9% in media (1129 traiettorie)
+  totale   entrate su oggetti per traiettoria:   8.5 | tipi di oggetto toccati: 2.94 | compito completato da chi non vince:  30.0% in media (1141 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      99.5%     99.52 ±   6.91     76.94 ±  13.65
+  random     54.8%     54.84 ±  49.77     33.84 ±  33.01
+  totale     77.2%     77.18 ±  41.97     55.39 ±  33.20
+  passi (azioni) con reward: positivo 1.5%, negativo 0.0%, nullo 98.5%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      99.5%     99.72 ±   4.23     82.18 ±  11.37
+  random     54.8%     68.34 ±  38.58     47.60 ±  29.94
+  totale     77.2%     84.03 ±  31.61     64.89 ±  28.49
+  passi (azioni) con reward: positivo 3.3%, negativo 0.0%, nullo 96.7%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  noisy:
+      2:8       3:18      4:23      5:36      6:36      7:57      8:49      9:54     10:73     11:60     12:65     13:64  
+     14:76     15:69     16:76     17:72     18:68     19:57     20:54     21:61     22:58     23:60     24:63     25:68  
+     26:54     27:53     28:39     29:37     30:42     31:42     32:50     33:59     34:37     35:32     36:38     37:38  
+     38:34     39:32     40:31     41:47     42:26     43:23     44:28     45:21     46:23     47:18     48:20     49:23  
+     50:21     51:23     52:14     53:14     54:18     55:17     56:13     57:17     58:17     59:14     60:5      61:8   
+     62:10     63:5      64:10     65:13     66:8      67:3      68:7      69:5      70:5      71:7      72:9      73:2   
+     74:2      75:4      76:4      77:6      78:4      79:2      80:1      81:4      83:2      84:3      85:2      86:4   
+     87:4      88:1      89:1      91:1      92:3      93:2      94:1     100:12  
+  random:
+      2:1       3:6       4:6       5:5       6:9       7:6       8:6       9:11     10:11     11:9      12:10     13:18  
+     14:12     15:15     16:17     17:8      18:12     19:14     20:14     21:13     22:18     23:17     24:13     25:20  
+     26:18     27:13     28:13     29:28     30:19     31:18     32:8      33:12     34:10     35:27     36:19     37:15  
+     38:12     39:19     40:9      41:13     42:11     43:5      44:11     45:16     46:14     47:12     48:29     49:16  
+     50:15     51:15     52:18     53:12     54:18     55:20     56:11     57:18     58:19     59:19     60:14     61:10  
+     62:15     63:13     64:19     65:17     66:16     67:14     68:14     69:13     70:14     71:16     72:18     73:16  
+     74:12     75:16     76:14     77:8      78:20     79:17     80:12     81:21     82:14     83:11     84:12     85:15  
+     86:11     87:12     88:13     89:15     90:17     91:5      92:11     93:12     94:12     95:15     96:13     97:11  
+     98:13     99:10    100:1146
+
+====================================================================================================
+ task4 / medium_expert   (task4: seq_visit(pickaxe, lava) + seq_visit(door, gem))
+====================================================================================================
+Traiettorie: 5000 | optimal: 2500, noisy: 2500 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  optimal   2500     2500 (100.0%)      0 (  0.0%)      0 (  0.0%)
+  noisy     2500     2437 ( 97.5%)      0 (  0.0%)     63 (  2.5%)
+  totale    5000     4937 ( 98.7%)      0 (  0.0%)     63 (  1.3%)
+  passi (azioni) totali: 136781 | passi in cui arriva il reward di vittoria: 3.6% | di fallimento: 0.0%
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  optimal    10.5       10    4   21    14
+  noisy      44.3       40    6  100    88
+  totale     27.4       15    4  100    75
+
+PROGRESSO E OGGETTI
+  optimal  entrate su oggetti per traiettoria:   4.5 | tipi di oggetto toccati: 4.00 | compito completato da chi non vince: -
+  noisy    entrate su oggetti per traiettoria:   9.8 | tipi di oggetto toccati: 3.99 | compito completato da chi non vince:  71.0% in media (63 traiettorie)
+  totale   entrate su oggetti per traiettoria:   7.1 | tipi di oggetto toccati: 3.99 | compito completato da chi non vince:  71.0% in media (63 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  optimal   100.0%    100.00 ±   0.00     90.96 ±   2.12
+  noisy      97.5%     97.48 ±  15.67     65.23 ±  16.13
+  totale     98.7%     98.74 ±  11.15     78.10 ±  17.26
+  passi (azioni) con reward: positivo 3.6%, negativo 0.0%, nullo 96.4%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  optimal   100.0%    100.00 ±   0.00     94.50 ±   1.67
+  noisy      97.5%     99.27 ±   4.82     78.62 ±  10.31
+  totale     98.7%     99.64 ±   3.43     86.56 ±  10.84
+  passi (azioni) con reward: positivo 14.6%, negativo 0.0%, nullo 85.4%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  optimal:
+      4:4       5:14      6:68      7:156     8:270     9:374    10:421    11:409    12:322    13:216    14:128    15:76  
+     16:25     17:9      18:4      19:2      20:1      21:1   
+  noisy:
+      6:1       7:4       8:6       9:9      10:5      11:17     12:10     13:21     14:9      15:25     16:22     17:30  
+     18:34     19:36     20:47     21:46     22:32     23:41     24:34     25:45     26:55     27:44     28:59     29:53  
+     30:71     31:42     32:51     33:51     34:64     35:56     36:50     37:43     38:48     39:50     40:48     41:46  
+     42:40     43:50     44:38     45:44     46:41     47:52     48:35     49:35     50:33     51:37     52:32     53:30  
+     54:32     55:44     56:29     57:17     58:39     59:30     60:31     61:17     62:30     63:22     64:24     65:17  
+     66:22     67:16     68:21     69:14     70:17     71:14     72:13     73:14     74:10     75:10     76:7      77:6   
+     78:20     79:9      80:6      81:13     82:4      83:10     84:4      85:6      86:13     87:11     88:12     89:6   
+     90:10     91:5      92:4      93:6      94:9      95:5      96:5      97:2      99:3     100:69  
+
+====================================================================================================
+ task4 / medium   (task4: seq_visit(pickaxe, lava) + seq_visit(door, gem))
+====================================================================================================
+Traiettorie: 5000 | noisy: 5000 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  noisy     5000     4887 ( 97.7%)      0 (  0.0%)    113 (  2.3%)
+  totale    5000     4887 ( 97.7%)      0 (  0.0%)    113 (  2.3%)
+  passi (azioni) totali: 223505 | passi in cui arriva il reward di vittoria: 2.2% | di fallimento: 0.0%
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  noisy      44.7       41    5  100    88
+  totale     44.7       41    5  100    88
+
+PROGRESSO E OGGETTI
+  noisy    entrate su oggetti per traiettoria:   9.9 | tipi di oggetto toccati: 3.99 | compito completato da chi non vince:  69.2% in media (113 traiettorie)
+  totale   entrate su oggetti per traiettoria:   9.9 | tipi di oggetto toccati: 3.99 | compito completato da chi non vince:  69.2% in media (113 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      97.7%     97.74 ±  14.86     64.98 ±  15.58
+  totale     97.7%     97.74 ±  14.86     64.98 ±  15.58
+  passi (azioni) con reward: positivo 2.2%, negativo 0.0%, nullo 97.8%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      97.7%     99.31 ±   4.86     78.43 ±  10.10
+  totale     97.7%     99.31 ±   4.86     78.43 ±  10.10
+  passi (azioni) con reward: positivo 8.9%, negativo 0.0%, nullo 91.1%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  noisy:
+      5:1       6:3       7:1       8:4       9:8      10:9      11:19     12:20     13:29     14:34     15:41     16:67  
+     17:55     18:57     19:60     20:64     21:80     22:87     23:80     24:85     25:94     26:107    27:104    28:96  
+     29:97     30:126    31:95     32:96     33:111    34:99     35:121    36:99     37:87     38:99     39:103    40:80  
+     41:94     42:111    43:108    44:78     45:102    46:101    47:87     48:86     49:69     50:79     51:81     52:71  
+     53:69     54:62     55:66     56:65     57:59     58:64     59:50     60:57     61:42     62:44     63:42     64:45  
+     65:38     66:39     67:50     68:30     69:35     70:42     71:22     72:30     73:35     74:22     75:29     76:29  
+     77:25     78:22     79:16     80:20     81:20     82:18     83:18     84:14     85:18     86:15     87:11     88:10  
+     89:15     90:11     91:15     92:12     93:10     94:13     95:7      96:4      97:9      98:10     99:11    100:125 
+
+====================================================================================================
+ task4 / medium_replay   (task4: seq_visit(pickaxe, lava) + seq_visit(door, gem))
+====================================================================================================
+Traiettorie: 5000 | noisy: 2500, random: 2500 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  noisy     2500     2457 ( 98.3%)      0 (  0.0%)     43 (  1.7%)
+  random    2500      712 ( 28.5%)      0 (  0.0%)   1788 ( 71.5%)
+  totale    5000     3169 ( 63.4%)      0 (  0.0%)   1831 ( 36.6%)
+  passi (azioni) totali: 337799 | passi in cui arriva il reward di vittoria: 0.9% | di fallimento: 0.0%
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  noisy      44.3       40    7  100    86
+  random     90.9      100    9  100   100
+  totale     67.6       69    7  100   100
+
+PROGRESSO E OGGETTI
+  noisy    entrate su oggetti per traiettoria:   9.8 | tipi di oggetto toccati: 3.99 | compito completato da chi non vince:  68.6% in media (43 traiettorie)
+  random   entrate su oggetti per traiettoria:  14.4 | tipi di oggetto toccati: 3.28 | compito completato da chi non vince:  55.1% in media (1788 traiettorie)
+  totale   entrate su oggetti per traiettoria:  12.1 | tipi di oggetto toccati: 3.63 | compito completato da chi non vince:  55.4% in media (1831 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      98.3%     98.28 ±  13.00     65.49 ±  15.17
+  random     28.5%     28.48 ±  45.13     14.91 ±  24.49
+  totale     63.4%     63.38 ±  48.18     40.20 ±  32.47
+  passi (azioni) con reward: positivo 0.9%, negativo 0.0%, nullo 99.1%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      98.3%     99.46 ±   4.50     78.82 ±  10.04
+  random     28.5%     67.86 ±  27.27     47.51 ±  21.11
+  totale     63.4%     83.66 ±  25.13     63.16 ±  22.77
+  passi (azioni) con reward: positivo 5.0%, negativo 0.0%, nullo 95.0%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  noisy:
+      7:2       8:6       9:5      10:8      11:11     12:8      13:25     14:18     15:34     16:31     17:38     18:35  
+     19:30     20:29     21:38     22:28     23:48     24:39     25:45     26:37     27:54     28:34     29:63     30:53  
+     31:49     32:66     33:55     34:62     35:42     36:50     37:69     38:45     39:50     40:55     41:49     42:49  
+     43:43     44:36     45:31     46:49     47:40     48:37     49:37     50:46     51:27     52:32     53:31     54:27  
+     55:31     56:31     57:32     58:39     59:34     60:14     61:25     62:25     63:26     64:19     65:25     66:23  
+     67:12     68:10     69:20     70:19     71:15     72:15     73:12     74:12     75:17     76:17     77:14     78:11  
+     79:12     80:12     81:14     82:7      83:6      84:11     85:9      86:12     87:9      88:7      89:4      90:9   
+     91:8      92:6      93:6      94:4      95:7      96:3      97:4      98:5      99:1     100:50  
+  random:
+      9:2      14:2      16:2      17:2      18:2      19:3      20:1      21:4      22:3      23:2      24:7      25:2   
+     26:2      27:4      28:4      29:4      30:5      31:3      32:1      33:3      34:3      35:6      36:4      37:6   
+     38:5      39:3      40:5      41:6      42:7      43:6      44:10     45:7      46:7      47:16     48:2      49:5   
+     50:9      51:9      52:7      53:3      54:6      55:12     56:11     57:10     58:9      59:4      60:11     61:9   
+     62:12     63:13     64:9      65:9      66:9      67:8      68:16     69:10     70:7      71:16     72:8      73:10  
+     74:12     75:13     76:13     77:10     78:11     79:10     80:12     81:18     82:9      83:13     84:15     85:9   
+     86:15     87:11     88:12     89:11     90:16     91:12     92:12     93:10     94:9      95:7      96:12     97:15  
+     98:22     99:12    100:1796
+
+====================================================================================================
+ task5 / medium_expert   (task5: seq_visit(pickaxe, lava) + visit(door))
+====================================================================================================
+Traiettorie: 5000 | optimal: 2500, noisy: 2500 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  optimal   2500     2500 (100.0%)      0 (  0.0%)      0 (  0.0%)
+  noisy     2500     2470 ( 98.8%)      0 (  0.0%)     30 (  1.2%)
+  totale    5000     4970 ( 99.4%)      0 (  0.0%)     30 (  0.6%)
+  passi (azioni) totali: 109951 | passi in cui arriva il reward di vittoria: 4.5% | di fallimento: 0.0%
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  optimal     8.3        8    3   19    12
+  noisy      35.7       31    4  100    75
+  totale     22.0       12    3  100    63
+
+PROGRESSO E OGGETTI
+  optimal  entrate su oggetti per traiettoria:   3.4 | tipi di oggetto toccati: 3.21 | compito completato da chi non vince: -
+  noisy    entrate su oggetti per traiettoria:   7.6 | tipi di oggetto toccati: 3.48 | compito completato da chi non vince:  61.1% in media (30 traiettorie)
+  totale   entrate su oggetti per traiettoria:   5.5 | tipi di oggetto toccati: 3.35 | compito completato da chi non vince:  61.1% in media (30 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  optimal   100.0%    100.00 ±   0.00     92.95 ±   2.07
+  noisy      98.8%     98.80 ±  10.89     71.48 ±  14.88
+  totale     99.4%     99.40 ±   7.72     82.22 ±  15.10
+  passi (azioni) con reward: positivo 4.5%, negativo 0.0%, nullo 95.5%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  optimal   100.0%    100.00 ±   0.00     95.52 ±   1.61
+  noisy      98.8%     99.53 ±   4.45     81.55 ±  10.33
+  totale     99.4%     99.77 ±   3.15     88.54 ±  10.17
+  passi (azioni) con reward: positivo 13.6%, negativo 0.0%, nullo 86.4%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  optimal:
+      3:6       4:68      5:179     6:301     7:392     8:435     9:394    10:341    11:197    12:94     13:47     14:34  
+     15:9      16:2      19:1   
+  noisy:
+      4:2       5:7       6:13      7:14      8:17      9:21     10:29     11:33     12:50     13:40     14:46     15:47  
+     16:63     17:58     18:66     19:61     20:68     21:53     22:45     23:62     24:71     25:71     26:52     27:45  
+     28:64     29:45     30:60     31:59     32:49     33:44     34:51     35:48     36:48     37:43     38:45     39:33  
+     40:40     41:35     42:32     43:37     44:39     45:33     46:30     47:32     48:26     49:33     50:28     51:25  
+     52:28     53:22     54:33     55:19     56:19     57:19     58:22     59:13     60:21     61:14     62:13     63:14  
+     64:21     65:17     66:14     67:8      68:12     69:11     70:5      71:9      72:12     73:5      74:5      75:7   
+     76:4      77:4      78:3      79:5      80:7      81:1      82:4      83:6      84:3      85:6      86:6      87:3   
+     88:3      89:8      90:4      91:2      92:2      93:6      94:4      95:1      96:1      97:3      98:2     100:36  
+
+====================================================================================================
+ task5 / medium   (task5: seq_visit(pickaxe, lava) + visit(door))
+====================================================================================================
+Traiettorie: 5000 | noisy: 5000 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  noisy     5000     4943 ( 98.9%)      0 (  0.0%)     57 (  1.1%)
+  totale    5000     4943 ( 98.9%)      0 (  0.0%)     57 (  1.1%)
+  passi (azioni) totali: 175863 | passi in cui arriva il reward di vittoria: 2.8% | di fallimento: 0.0%
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  noisy      35.2       31    3  100    75
+  totale     35.2       31    3  100    75
+
+PROGRESSO E OGGETTI
+  noisy    entrate su oggetti per traiettoria:   7.6 | tipi di oggetto toccati: 3.51 | compito completato da chi non vince:  60.8% in media (57 traiettorie)
+  totale   entrate su oggetti per traiettoria:   7.6 | tipi di oggetto toccati: 3.51 | compito completato da chi non vince:  60.8% in media (57 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      98.9%     98.86 ±  10.62     71.80 ±  14.55
+  totale     98.9%     98.86 ±  10.62     71.80 ±  14.55
+  passi (azioni) con reward: positivo 2.8%, negativo 0.0%, nullo 97.2%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      98.9%     99.55 ±   4.42     81.59 ±  10.21
+  totale     98.9%     99.55 ±   4.42     81.59 ±  10.21
+  passi (azioni) con reward: positivo 8.5%, negativo 0.0%, nullo 91.5%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  noisy:
+      3:1       4:8       5:13      6:24      7:33      8:44      9:41     10:54     11:68     12:89     13:96     14:83  
+     15:93     16:118    17:106    18:135    19:104    20:114    21:115    22:130    23:122    24:117    25:130    26:112 
+     27:131    28:115    29:118    30:117    31:95     32:91     33:116    34:87     35:99     36:92     37:85     38:96  
+     39:114    40:88     41:89     42:79     43:97     44:61     45:61     46:55     47:58     48:68     49:50     50:58  
+     51:46     52:49     53:41     54:43     55:34     56:31     57:37     58:37     59:40     60:36     61:24     62:28  
+     63:18     64:22     65:19     66:27     67:31     68:21     69:23     70:16     71:11     72:19     73:13     74:12  
+     75:18     76:16     77:8      78:17     79:15     80:7      81:14     82:6      83:8      84:6      85:7      86:6   
+     87:7      88:8      89:3      90:7      91:3      92:10     93:4      94:4      95:5      96:6      97:3      98:1   
+     99:2     100:61  
+
+====================================================================================================
+ task5 / medium_replay   (task5: seq_visit(pickaxe, lava) + visit(door))
+====================================================================================================
+Traiettorie: 5000 | noisy: 2500, random: 2500 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  noisy     2500     2479 ( 99.2%)      0 (  0.0%)     21 (  0.8%)
+  random    2500     1137 ( 45.5%)      0 (  0.0%)   1363 ( 54.5%)
+  totale    5000     3616 ( 72.3%)      0 (  0.0%)   1384 ( 27.7%)
+  passi (azioni) totali: 293042 | passi in cui arriva il reward di vittoria: 1.2% | di fallimento: 0.0%
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  noisy      35.3       32    4  100    73
+  random     82.0      100    5  100   100
+  totale     58.6       52    4  100   100
+
+PROGRESSO E OGGETTI
+  noisy    entrate su oggetti per traiettoria:   7.6 | tipi di oggetto toccati: 3.48 | compito completato da chi non vince:  61.9% in media (21 traiettorie)
+  random   entrate su oggetti per traiettoria:  12.3 | tipi di oggetto toccati: 3.19 | compito completato da chi non vince:  50.9% in media (1363 traiettorie)
+  totale   entrate su oggetti per traiettoria:   9.9 | tipi di oggetto toccati: 3.34 | compito completato da chi non vince:  51.1% in media (1384 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      99.2%     99.16 ±   9.13     71.80 ±  13.95
+  random     45.5%     45.48 ±  49.80     25.77 ±  29.70
+  totale     72.3%     72.32 ±  44.74     48.79 ±  32.68
+  passi (azioni) con reward: positivo 1.2%, negativo 0.0%, nullo 98.8%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      99.2%     99.68 ±   3.64     81.74 ±   9.68
+  random     45.5%     73.23 ±  28.88     52.68 ±  22.76
+  totale     72.3%     86.45 ±  24.47     67.21 ±  22.74
+  passi (azioni) con reward: positivo 4.4%, negativo 0.0%, nullo 95.6%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  noisy:
+      4:4       5:6       6:9       7:18      8:22      9:24     10:22     11:32     12:38     13:42     14:57     15:60  
+     16:57     17:45     18:64     19:51     20:42     21:55     22:72     23:50     24:52     25:53     26:57     27:48  
+     28:70     29:58     30:64     31:66     32:48     33:47     34:59     35:66     36:49     37:54     38:49     39:54  
+     40:47     41:41     42:34     43:29     44:39     45:38     46:24     47:27     48:29     49:28     50:34     51:22  
+     52:25     53:22     54:15     55:22     56:21     57:16     58:13     59:18     60:19     61:20     62:10     63:19  
+     64:11     65:8      66:18     67:9      68:8      69:9      70:12     71:6      72:13     73:10     74:9      75:3   
+     76:6      77:8      78:5      79:6      80:4      81:4      82:2      83:11     84:8      85:4      86:3      87:4   
+     88:4      89:1      90:2      91:2      92:2      93:1      94:1      95:1      96:2      97:2      98:1      99:1   
+    100:23  
+  random:
+      5:2       7:3       8:2       9:6      10:1      12:1      13:5      14:6      15:5      16:6      17:2      18:7   
+     19:7      20:8      21:5      22:10     23:4      24:11     25:6      26:7      27:8      28:11     29:7      30:15  
+     31:13     32:9      33:12     34:8      35:9      36:15     37:9      38:14     39:11     40:14     41:12     42:16  
+     43:19     44:17     45:12     46:8      47:19     48:15     49:16     50:16     51:11     52:11     53:11     54:20  
+     55:13     56:19     57:16     58:12     59:23     60:13     61:7      62:15     63:19     64:18     65:10     66:14  
+     67:17     68:17     69:9      70:15     71:19     72:21     73:18     74:15     75:10     76:19     77:14     78:19  
+     79:13     80:17     81:17     82:17     83:13     84:12     85:10     86:19     87:12     88:11     89:11     90:18  
+     91:11     92:17     93:11     94:19     95:10     96:16     97:16     98:8      99:14    100:1374
+
+====================================================================================================
+ task6 / medium_expert   (task6: seq_visit(pickaxe, lava) + visit(door, gem))
+====================================================================================================
+Traiettorie: 5000 | optimal: 2500, noisy: 2500 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  optimal   2500     2500 (100.0%)      0 (  0.0%)      0 (  0.0%)
+  noisy     2500     2461 ( 98.4%)      0 (  0.0%)     39 (  1.6%)
+  totale    5000     4961 ( 99.2%)      0 (  0.0%)     39 (  0.8%)
+  passi (azioni) totali: 125061 | passi in cui arriva il reward di vittoria: 4.0% | di fallimento: 0.0%
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  optimal     9.7       10    4   18    13
+  noisy      40.4       36    6  100    79
+  totale     25.0       14    4  100    68
+
+PROGRESSO E OGGETTI
+  optimal  entrate su oggetti per traiettoria:   4.3 | tipi di oggetto toccati: 4.00 | compito completato da chi non vince: -
+  noisy    entrate su oggetti per traiettoria:   9.0 | tipi di oggetto toccati: 3.99 | compito completato da chi non vince:  70.5% in media (39 traiettorie)
+  totale   entrate su oggetti per traiettoria:   6.6 | tipi di oggetto toccati: 3.99 | compito completato da chi non vince:  70.5% in media (39 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  optimal   100.0%    100.00 ±   0.00     91.67 ±   1.97
+  noisy      98.4%     98.44 ±  12.39     68.02 ±  14.66
+  totale     99.2%     99.22 ±   8.80     79.85 ±  15.79
+  passi (azioni) con reward: positivo 4.0%, negativo 0.0%, nullo 96.0%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  optimal   100.0%    100.00 ±   0.00     95.07 ±   1.51
+  noisy      98.4%     99.54 ±   3.85     81.30 ±   9.03
+  totale     99.2%     99.77 ±   2.73     88.18 ±   9.45
+  passi (azioni) con reward: positivo 16.0%, negativo 0.0%, nullo 84.0%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  optimal:
+      4:5       5:28      6:100     7:266     8:368     9:454    10:442    11:359    12:238    13:122    14:73     15:29  
+     16:8      17:6      18:2   
+  noisy:
+      6:2       7:4       8:6       9:5      10:7      11:14     12:15     13:18     14:28     15:27     16:48     17:45  
+     18:40     19:49     20:49     21:68     22:51     23:47     24:58     25:52     26:59     27:52     28:54     29:51  
+     30:61     31:56     32:56     33:45     34:58     35:62     36:63     37:43     38:55     39:48     40:41     41:49  
+     42:55     43:48     44:42     45:41     46:36     47:39     48:41     49:27     50:31     51:35     52:38     53:30  
+     54:30     55:23     56:17     57:21     58:27     59:26     60:19     61:19     62:14     63:23     64:21     65:22  
+     66:14     67:18     68:16     69:11     70:7      71:13     72:11     73:15     74:15     75:11     76:10     77:7   
+     78:9      79:13     80:5      81:5      82:9      83:12     84:3      85:3      86:3      87:5      88:3      89:3   
+     90:2      91:2      92:6      93:4      94:1      96:2      97:3      98:3      99:3     100:42  
+
+====================================================================================================
+ task6 / medium   (task6: seq_visit(pickaxe, lava) + visit(door, gem))
+====================================================================================================
+Traiettorie: 5000 | noisy: 5000 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  noisy     5000     4932 ( 98.6%)      0 (  0.0%)     68 (  1.4%)
+  totale    5000     4932 ( 98.6%)      0 (  0.0%)     68 (  1.4%)
+  passi (azioni) totali: 205153 | passi in cui arriva il reward di vittoria: 2.4% | di fallimento: 0.0%
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  noisy      41.0       38    4  100    80
+  totale     41.0       38    4  100    80
+
+PROGRESSO E OGGETTI
+  noisy    entrate su oggetti per traiettoria:   9.1 | tipi di oggetto toccati: 3.99 | compito completato da chi non vince:  72.4% in media (68 traiettorie)
+  totale   entrate su oggetti per traiettoria:   9.1 | tipi di oggetto toccati: 3.99 | compito completato da chi non vince:  72.4% in media (68 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      98.6%     98.64 ±  11.58     67.63 ±  14.35
+  totale     98.6%     98.64 ±  11.58     67.63 ±  14.35
+  passi (azioni) con reward: positivo 2.4%, negativo 0.0%, nullo 97.6%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      98.6%     99.62 ±   3.31     80.95 ±   8.91
+  totale     98.6%     99.62 ±   3.31     80.95 ±   8.91
+  passi (azioni) con reward: positivo 9.7%, negativo 0.0%, nullo 90.3%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  noisy:
+      4:1       5:1       6:1       7:5       8:9       9:18     10:14     11:29     12:42     13:43     14:55     15:58  
+     16:62     17:65     18:81     19:87     20:74     21:102    22:105    23:87     24:107    25:114    26:113    27:119 
+     28:104    29:115    30:103    31:123    32:110    33:121    34:101    35:108    36:104    37:99     38:101    39:117 
+     40:112    41:90     42:101    43:108    44:102    45:80     46:73     47:76     48:83     49:69     50:45     51:77  
+     52:56     53:70     54:46     55:53     56:66     57:55     58:47     59:50     60:45     61:45     62:46     63:36  
+     64:35     65:30     66:41     67:33     68:24     69:32     70:25     71:29     72:26     73:25     74:13     75:27  
+     76:22     77:15     78:22     79:10     80:15     81:13     82:11     83:14     84:14     85:10     86:14     87:16  
+     88:7      89:10     90:13     91:10     92:7      93:7      94:4      95:2      96:6      97:8      98:2      99:4   
+    100:75  
+
+====================================================================================================
+ task6 / medium_replay   (task6: seq_visit(pickaxe, lava) + visit(door, gem))
+====================================================================================================
+Traiettorie: 5000 | noisy: 2500, random: 2500 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  noisy     2500     2459 ( 98.4%)      0 (  0.0%)     41 (  1.6%)
+  random    2500      987 ( 39.5%)      0 (  0.0%)   1513 ( 60.5%)
+  totale    5000     3446 ( 68.9%)      0 (  0.0%)   1554 ( 31.1%)
+  passi (azioni) totali: 317435 | passi in cui arriva il reward di vittoria: 1.1% | di fallimento: 0.0%
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  noisy      40.7       37    5  100    78
+  random     86.3      100    9  100   100
+  totale     63.5       60    5  100   100
+
+PROGRESSO E OGGETTI
+  noisy    entrate su oggetti per traiettoria:   9.0 | tipi di oggetto toccati: 3.99 | compito completato da chi non vince:  69.5% in media (41 traiettorie)
+  random   entrate su oggetti per traiettoria:  13.6 | tipi di oggetto toccati: 3.31 | compito completato da chi non vince:  59.9% in media (1513 traiettorie)
+  totale   entrate su oggetti per traiettoria:  11.3 | tipi di oggetto toccati: 3.65 | compito completato da chi non vince:  60.1% in media (1554 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      98.4%     98.36 ±  12.70     67.76 ±  14.75
+  random     39.5%     39.48 ±  48.88     21.24 ±  27.47
+  totale     68.9%     68.92 ±  46.28     44.50 ±  32.04
+  passi (azioni) con reward: positivo 1.1%, negativo 0.0%, nullo 98.9%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      98.4%     99.50 ±   4.09     80.97 ±   9.14
+  random     39.5%     75.72 ±  24.33     55.33 ±  19.47
+  totale     68.9%     87.61 ±  21.11     68.15 ±  19.89
+  passi (azioni) con reward: positivo 5.5%, negativo 0.0%, nullo 94.5%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  noisy:
+      5:1       6:5       7:4       8:4       9:8      10:18     11:12     12:21     13:19     14:33     15:29     16:35  
+     17:34     18:30     19:36     20:39     21:52     22:54     23:62     24:47     25:49     26:52     27:59     28:59  
+     29:73     30:41     31:40     32:59     33:71     34:61     35:54     36:59     37:49     38:54     39:43     40:59  
+     41:48     42:35     43:35     44:50     45:35     46:38     47:51     48:48     49:25     50:35     51:34     52:44  
+     53:35     54:27     55:32     56:17     57:34     58:31     59:29     60:23     61:21     62:15     63:13     64:18  
+     65:18     66:15     67:13     68:10     69:8      70:14     71:12     72:14     73:13     74:15     75:12     76:19  
+     77:5      78:9      79:5      80:4      81:5      82:6      83:7      84:6      85:5      86:6      87:2      88:6   
+     89:3      90:1      91:4      92:3      93:1      94:5      95:4      96:2      97:2      98:3      99:2     100:43  
+  random:
+      9:1      10:1      12:1      13:2      14:3      15:1      16:2      17:2      18:4      19:1      20:5      21:3   
+     22:6      23:8      24:2      25:7      26:8      27:10     28:3      29:4      30:9      31:7      32:7      33:6   
+     34:6      35:10     36:7      37:9      38:9      39:11     40:12     41:8      42:12     43:10     44:9      45:20  
+     46:10     47:13     48:13     49:9      50:12     51:12     52:14     53:8      54:9      55:13     56:9      57:6   
+     58:12     59:9      60:8      61:11     62:16     63:13     64:16     65:11     66:13     67:14     68:16     69:13  
+     70:16     71:13     72:19     73:18     74:20     75:26     76:13     77:15     78:17     79:11     80:19     81:12  
+     82:16     83:15     84:20     85:14     86:13     87:13     88:18     89:8      90:13     91:11     92:13     93:15  
+     94:26     95:15     96:17     97:14     98:10     99:17    100:1527
+
+====================================================================================================
+ task7 / medium_expert   (task7: visit(pickaxe, lava) + glob_av(door))
+====================================================================================================
+Traiettorie: 5000 | optimal: 2500, noisy: 2500 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  optimal   2500     2500 (100.0%)      0 (  0.0%)      0 (  0.0%)
+  noisy     2500     1708 ( 68.3%)    791 ( 31.6%)      1 (  0.0%)
+  totale    5000     4208 ( 84.2%)    791 ( 15.8%)      1 (  0.0%)
+  passi (azioni) totali: 60879 | passi in cui arriva il reward di vittoria: 6.9% | di fallimento: 1.3%
+  fallimenti per oggetto toccato: door (D): 791 (noisy 791)
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  optimal     5.8        6    2   13     9
+  noisy      18.6       15    1  100    46
+  totale     12.2        7    1  100    37
+
+PROGRESSO E OGGETTI
+  optimal  entrate su oggetti per traiettoria:   2.2 | tipi di oggetto toccati: 2.17 | compito completato da chi non vince: -
+  noisy    entrate su oggetti per traiettoria:   3.4 | tipi di oggetto toccati: 2.17 | compito completato da chi non vince:  25.3% in media (792 traiettorie)
+  totale   entrate su oggetti per traiettoria:   2.8 | tipi di oggetto toccati: 2.17 | compito completato da chi non vince:  25.3% in media (792 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  optimal   100.0%    100.00 ±   0.00     95.32 ±   1.86
+  noisy      68.3%     36.68 ±  93.01     28.46 ±  80.40
+  totale     84.2%     68.34 ±  72.99     61.89 ±  65.97
+  passi (azioni) con reward: positivo 6.9%, negativo 1.3%, nullo 91.8%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  optimal   100.0%    100.00 ±   0.00     96.77 ±   1.54
+  noisy      68.3%     36.70 ±  93.01     32.67 ±  81.61
+  totale     84.2%     68.35 ±  72.98     64.72 ±  66.02
+  passi (azioni) con reward: positivo 14.5%, negativo 1.3%, nullo 84.2%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  optimal:
+      2:80      3:209     4:405     5:456     6:476     7:387     8:276     9:131    10:48     11:28     12:2      13:2   
+  noisy:
+      1:64      2:58      3:82      4:93      5:80      6:86      7:102     8:102     9:101    10:87     11:82     12:83  
+     13:88     14:75     15:73     16:89     17:77     18:71     19:57     20:58     21:60     22:51     23:44     24:52  
+     25:45     26:56     27:34     28:35     29:48     30:32     31:34     32:27     33:35     34:28     35:34     36:18  
+     37:27     38:10     39:12     40:16     41:12     42:16     43:14     44:12     45:11     46:10     47:9      48:10  
+     49:4      50:8      51:6      52:5      53:3      54:10     55:8      56:3      57:5      58:7      59:2      60:4   
+     61:3      62:4      63:4      64:1      65:3      66:4      68:4      70:1      71:1      74:1      75:1      76:1   
+     78:1      79:1      80:1      87:1      88:1      89:1     100:1   
+
+====================================================================================================
+ task7 / medium   (task7: visit(pickaxe, lava) + glob_av(door))
+====================================================================================================
+Traiettorie: 5000 | noisy: 5000 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  noisy     5000     3403 ( 68.1%)   1594 ( 31.9%)      3 (  0.1%)
+  totale    5000     3403 ( 68.1%)   1594 ( 31.9%)      3 (  0.1%)
+  passi (azioni) totali: 91093 | passi in cui arriva il reward di vittoria: 3.7% | di fallimento: 1.7%
+  fallimenti per oggetto toccato: door (D): 1594 (noisy 1594)
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  noisy      18.2       15    1  100    45
+  totale     18.2       15    1  100    45
+
+PROGRESSO E OGGETTI
+  noisy    entrate su oggetti per traiettoria:   3.4 | tipi di oggetto toccati: 2.17 | compito completato da chi non vince:  25.6% in media (1597 traiettorie)
+  totale   entrate su oggetti per traiettoria:   3.4 | tipi di oggetto toccati: 2.17 | compito completato da chi non vince:  25.6% in media (1597 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      68.1%     36.18 ±  93.19     28.05 ±  80.80
+  totale     68.1%     36.18 ±  93.19     28.05 ±  80.80
+  passi (azioni) con reward: positivo 3.7%, negativo 1.7%, nullo 94.5%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      68.1%     36.21 ±  93.19     32.20 ±  82.02
+  totale     68.1%     36.21 ±  93.19     32.20 ±  82.02
+  passi (azioni) con reward: positivo 8.4%, negativo 1.7%, nullo 89.9%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  noisy:
+      1:148     2:128     3:148     4:172     5:166     6:169     7:178     8:199     9:209    10:199    11:178    12:168 
+     13:189    14:185    15:175    16:136    17:161    18:130    19:100    20:137    21:102    22:101    23:120    24:83  
+     25:89     26:95     27:75     28:88     29:73     30:70     31:63     32:73     33:55     34:62     35:41     36:43  
+     37:33     38:32     39:31     40:35     41:30     42:31     43:24     44:25     45:18     46:20     47:17     48:11  
+     49:20     50:20     51:14     52:10     53:8      54:6      55:6      56:11     57:7      58:7      59:9      60:4   
+     61:8      62:4      63:3      64:5      65:3      66:1      67:3      68:3      69:3      70:5      72:2      73:3   
+     74:1      76:3      77:2      78:2      79:2      80:1      81:1      82:1      84:1      88:1      89:1      97:1   
+    100:3   
+
+====================================================================================================
+ task7 / medium_replay   (task7: visit(pickaxe, lava) + glob_av(door))
+====================================================================================================
+Traiettorie: 5000 | noisy: 2500, random: 2500 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  noisy     2500     1681 ( 67.2%)    818 ( 32.7%)      1 (  0.0%)
+  random    2500      744 ( 29.8%)   1574 ( 63.0%)    182 (  7.3%)
+  totale    5000     2425 ( 48.5%)   2392 ( 47.8%)    183 (  3.7%)
+  passi (azioni) totali: 129851 | passi in cui arriva il reward di vittoria: 1.9% | di fallimento: 1.8%
+  fallimenti per oggetto toccato: door (D): 2392 (noisy 818, random 1574)
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  noisy      18.1       15    1  100    44
+  random     33.9       24    1  100   100
+  totale     26.0       18    1  100    89
+
+PROGRESSO E OGGETTI
+  noisy    entrate su oggetti per traiettoria:   3.4 | tipi di oggetto toccati: 2.17 | compito completato da chi non vince:  27.4% in media (819 traiettorie)
+  random   entrate su oggetti per traiettoria:   4.4 | tipi di oggetto toccati: 2.00 | compito completato da chi non vince:  25.7% in media (1756 traiettorie)
+  totale   entrate su oggetti per traiettoria:   3.9 | tipi di oggetto toccati: 2.09 | compito completato da chi non vince:  26.3% in media (2575 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      67.2%     34.52 ±  93.83     27.14 ±  81.21
+  random     29.8%    -33.20 ±  90.39    -29.65 ±  70.68
+  totale     48.5%      0.66 ±  98.15     -1.25 ±  81.25
+  passi (azioni) con reward: positivo 1.9%, negativo 1.8%, nullo 96.3%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      67.2%     34.52 ±  93.83     31.21 ±  82.29
+  random     29.8%    -30.16 ±  92.27    -22.56 ±  74.40
+  totale     48.5%      2.18 ±  98.52      4.33 ±  82.92
+  passi (azioni) con reward: positivo 4.8%, negativo 1.8%, nullo 93.4%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  noisy:
+      1:67      2:52      3:88      4:71      5:81      6:91      7:102     8:92      9:94     10:86     11:98     12:99  
+     13:108    14:85     15:80     16:72     17:78     18:72     19:74     20:63     21:60     22:64     23:56     24:67  
+     25:34     26:53     27:34     28:33     29:43     30:43     31:33     32:25     33:23     34:25     35:21     36:18  
+     37:13     38:14     39:13     40:11     41:9      42:8      43:12     44:11     45:8      46:5      47:14     48:8   
+     49:5      50:2      51:6      52:4      53:4      54:5      55:4      56:2      57:2      58:5      59:9      60:4   
+     62:6      64:1      65:2      66:4      67:3      68:2      70:2      71:2      74:1      76:2      78:1      79:1   
+     80:1      81:1      82:2      85:1      86:1      89:1      93:1     100:2   
+  random:
+      1:92      2:71      3:65      4:51      5:78      6:64      7:66      8:52      9:49     10:65     11:52     12:39  
+     13:38     14:45     15:47     16:40     17:44     18:45     19:46     20:59     21:46     22:45     23:43     24:33  
+     25:30     26:31     27:36     28:37     29:33     30:24     31:24     32:17     33:29     34:20     35:28     36:31  
+     37:28     38:21     39:25     40:27     41:13     42:23     43:19     44:22     45:21     46:18     47:15     48:27  
+     49:17     50:16     51:25     52:13     53:9      54:11     55:10     56:11     57:8      58:14     59:8      60:9   
+     61:10     62:7      63:15     64:7      65:12     66:8      67:12     68:8      69:8      70:4      71:11     72:9   
+     73:5      74:7      75:11     76:10     77:6      78:4      79:8      80:4      81:6      82:7      83:6      84:4   
+     85:11     86:9      87:6      88:11     89:7      90:9      91:8      92:5      93:4      94:3      95:8      96:6   
+     97:1      98:2      99:5     100:191 
+
+====================================================================================================
+ task8 / medium_expert   (task8: visit(pickaxe, lava) + glob_av(door) + glob_av(gem))
+====================================================================================================
+Traiettorie: 5000 | optimal: 2500, noisy: 2500 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  optimal   2500     2500 (100.0%)      0 (  0.0%)      0 (  0.0%)
+  noisy     2500     1227 ( 49.1%)   1272 ( 50.9%)      1 (  0.0%)
+  totale    5000     3727 ( 74.5%)   1272 ( 25.4%)      1 (  0.0%)
+  passi (azioni) totali: 50714 | passi in cui arriva il reward di vittoria: 7.3% | di fallimento: 2.5%
+  fallimenti per oggetto toccato: gem (G): 653 (noisy 653), door (D): 619 (noisy 619)
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  optimal     5.8        6    2   13     9
+  noisy      14.4       12    1  100    38
+  totale     10.1        7    1  100    30
+
+PROGRESSO E OGGETTI
+  optimal  entrate su oggetti per traiettoria:   2.0 | tipi di oggetto toccati: 2.00 | compito completato da chi non vince: -
+  noisy    entrate su oggetti per traiettoria:   2.3 | tipi di oggetto toccati: 1.72 | compito completato da chi non vince:  22.5% in media (1273 traiettorie)
+  totale   entrate su oggetti per traiettoria:   2.2 | tipi di oggetto toccati: 1.86 | compito completato da chi non vince:  22.5% in media (1273 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  optimal   100.0%    100.00 ±   0.00     95.27 ±   1.89
+  noisy      49.1%     -1.80 ±  99.96     -4.34 ±  88.33
+  totale     74.5%     49.10 ±  87.10     45.47 ±  79.90
+  passi (azioni) con reward: positivo 7.3%, negativo 2.5%, nullo 90.1%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  optimal   100.0%    100.00 ±   0.00     96.74 ±   1.56
+  noisy      49.1%     -1.78 ±  99.97     -1.32 ±  89.60
+  totale     74.5%     49.11 ±  87.10     47.71 ±  80.12
+  passi (azioni) con reward: positivo 15.8%, negativo 2.5%, nullo 81.7%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  optimal:
+      2:78      3:214     4:383     5:462     6:462     7:387     8:282     9:138    10:61     11:26     12:5      13:2   
+  noisy:
+      1:117     2:113     3:127     4:110     5:124     6:110     7:111     8:119     9:92     10:112    11:109    12:81  
+     13:92     14:98     15:74     16:82     17:67     18:53     19:79     20:56     21:49     22:46     23:41     24:26  
+     25:43     26:36     27:26     28:23     29:29     30:17     31:22     32:24     33:12     34:16     35:13     36:7   
+     37:17     38:4      39:13     40:10     41:9      42:18     43:10     44:5      45:3      46:5      47:3      48:2   
+     49:1      50:5      51:5      52:4      53:3      54:3      55:2      56:1      57:1      58:1      59:3      60:4   
+     61:2      64:1      66:1      67:1      68:2      69:1      73:1      76:1      85:1     100:1   
+
+====================================================================================================
+ task8 / medium   (task8: visit(pickaxe, lava) + glob_av(door) + glob_av(gem))
+====================================================================================================
+Traiettorie: 5000 | noisy: 5000 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  noisy     5000     2439 ( 48.8%)   2557 ( 51.1%)      4 (  0.1%)
+  totale    5000     2439 ( 48.8%)   2557 ( 51.1%)      4 (  0.1%)
+  passi (azioni) totali: 71889 | passi in cui arriva il reward di vittoria: 3.4% | di fallimento: 3.6%
+  fallimenti per oggetto toccato: gem (G): 1307 (noisy 1307), door (D): 1250 (noisy 1250)
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  noisy      14.4       12    1  100    37
+  totale     14.4       12    1  100    37
+
+PROGRESSO E OGGETTI
+  noisy    entrate su oggetti per traiettoria:   2.4 | tipi di oggetto toccati: 1.72 | compito completato da chi non vince:  22.7% in media (2561 traiettorie)
+  totale   entrate su oggetti per traiettoria:   2.4 | tipi di oggetto toccati: 1.72 | compito completato da chi non vince:  22.7% in media (2561 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      48.8%     -2.36 ±  99.93     -4.80 ±  88.37
+  totale     48.8%     -2.36 ±  99.93     -4.80 ±  88.37
+  passi (azioni) con reward: positivo 3.4%, negativo 3.6%, nullo 93.1%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      48.8%     -2.32 ±  99.94     -1.73 ±  89.66
+  totale     48.8%     -2.32 ±  99.94     -1.73 ±  89.66
+  passi (azioni) con reward: positivo 8.4%, negativo 3.6%, nullo 88.0%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  noisy:
+      1:253     2:204     3:250     4:275     5:200     6:235     7:242     8:224     9:203    10:190    11:195    12:174 
+     13:193    14:162    15:170    16:143    17:144    18:118    19:136    20:141    21:109    22:92     23:86     24:82  
+     25:56     26:65     27:55     28:56     29:55     30:49     31:44     32:28     33:36     34:31     35:19     36:31  
+     37:23     38:20     39:12     40:23     41:9      42:14     43:17     44:10     45:14     46:10     47:10     48:13  
+     49:4      50:4      51:3      52:4      53:2      54:7      55:6      56:6      57:4      58:5      59:3      60:3   
+     62:1      63:2      64:3      65:1      66:1      67:3      68:1      69:1      70:1      71:2      72:1      73:1   
+     75:1      76:1      79:1      81:1      83:1      88:1     100:4   
+
+====================================================================================================
+ task8 / medium_replay   (task8: visit(pickaxe, lava) + glob_av(door) + glob_av(gem))
+====================================================================================================
+Traiettorie: 5000 | noisy: 2500, random: 2500 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  noisy     2500     1183 ( 47.3%)   1317 ( 52.7%)      0 (  0.0%)
+  random    2500      404 ( 16.2%)   2054 ( 82.2%)     42 (  1.7%)
+  totale    5000     1587 ( 31.7%)   3371 ( 67.4%)     42 (  0.8%)
+  passi (azioni) totali: 89490 | passi in cui arriva il reward di vittoria: 1.8% | di fallimento: 3.8%
+  fallimenti per oggetto toccato: door (D): 1691 (noisy 655, random 1036), gem (G): 1680 (noisy 662, random 1018)
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  noisy      14.8       12    1   83    39
+  random     21.0       13    1  100    72
+  totale     17.9       12    1  100    56
+
+PROGRESSO E OGGETTI
+  noisy    entrate su oggetti per traiettoria:   2.4 | tipi di oggetto toccati: 1.73 | compito completato da chi non vince:  24.1% in media (1317 traiettorie)
+  random   entrate su oggetti per traiettoria:   2.3 | tipi di oggetto toccati: 1.47 | compito completato da chi non vince:  19.6% in media (2096 traiettorie)
+  totale   entrate su oggetti per traiettoria:   2.4 | tipi di oggetto toccati: 1.60 | compito completato da chi non vince:  21.3% in media (3413 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      47.3%     -5.36 ±  99.86     -7.47 ±  87.91
+  random     16.2%    -66.00 ±  74.00    -57.79 ±  62.29
+  totale     31.7%    -35.68 ±  92.97    -32.63 ±  80.23
+  passi (azioni) con reward: positivo 1.8%, negativo 3.8%, nullo 94.5%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      47.3%     -5.36 ±  99.86     -4.37 ±  89.17
+  random     16.2%    -65.24 ±  74.92    -53.98 ±  65.00
+  totale     31.7%    -35.30 ±  93.21    -29.18 ±  81.88
+  passi (azioni) con reward: positivo 5.2%, negativo 3.8%, nullo 91.1%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  noisy:
+      1:137     2:96      3:127     4:124     5:134     6:105     7:109     8:98      9:102    10:96     11:106    12:87  
+     13:75     14:82     15:63     16:91     17:58     18:78     19:53     20:51     21:55     22:38     23:36     24:41  
+     25:36     26:48     27:31     28:27     29:31     30:24     31:24     32:20     33:14     34:23     35:13     36:18  
+     37:12     38:9      39:23     40:9      41:10     42:9      43:5      44:4      45:12     46:4      47:5      48:4   
+     49:4      50:2      51:3      52:1      53:3      54:2      55:2      56:1      58:3      59:1      60:4      61:2   
+     62:2      64:1      65:2      66:1      67:2      68:2      70:2      73:1      75:1      83:1   
+  random:
+      1:175     2:144     3:124     4:110     5:102     6:91      7:109     8:95      9:81     10:67     11:79     12:65  
+     13:69     14:59     15:57     16:35     17:45     18:36     19:38     20:48     21:34     22:38     23:28     24:23  
+     25:25     26:27     27:29     28:28     29:23     30:19     31:24     32:30     33:22     34:26     35:20     36:21  
+     37:10     38:14     39:15     40:11     41:19     42:10     43:11     44:17     45:16     46:8      47:15     48:11  
+     49:9      50:11     51:9      52:10     53:11     54:9      55:9      56:14     57:4      58:9      59:5      60:6   
+     61:8      62:4      63:6      64:8      65:5      66:5      67:7      68:4      69:5      70:4      71:5      72:7   
+     73:7      74:7      75:4      76:7      77:3      78:3      79:2      80:2      81:6      82:1      83:3      84:1   
+     85:5      86:4      87:3      88:1      89:1      90:4      91:4      92:2      93:1      94:2      95:3      96:3   
+     97:2     100:42  
+
+====================================================================================================
+ task9 / medium_expert   (task9: seq_visit(pickaxe, lava) + glob_av(door))
+====================================================================================================
+Traiettorie: 5000 | optimal: 2500, noisy: 2500 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  optimal   2500     2500 (100.0%)      0 (  0.0%)      0 (  0.0%)
+  noisy     2500     1590 ( 63.6%)    908 ( 36.3%)      2 (  0.1%)
+  totale    5000     4090 ( 81.8%)    908 ( 18.2%)      2 (  0.0%)
+  passi (azioni) totali: 67787 | passi in cui arriva il reward di vittoria: 6.0% | di fallimento: 1.3%
+  fallimenti per oggetto toccato: door (D): 908 (noisy 908)
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  optimal     6.5        6    2   17    11
+  noisy      20.7       17    1  100    50
+  totale     13.6        8    1  100    41
+
+PROGRESSO E OGGETTI
+  optimal  entrate su oggetti per traiettoria:   2.4 | tipi di oggetto toccati: 2.18 | compito completato da chi non vince: -
+  noisy    entrate su oggetti per traiettoria:   3.8 | tipi di oggetto toccati: 2.20 | compito completato da chi non vince:  18.9% in media (910 traiettorie)
+  totale   entrate su oggetti per traiettoria:   3.1 | tipi di oggetto toccati: 2.19 | compito completato da chi non vince:  18.9% in media (910 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  optimal   100.0%    100.00 ±   0.00     94.68 ±   2.14
+  noisy      63.6%     27.28 ±  96.17     19.51 ±  81.48
+  totale     81.8%     63.64 ±  77.11     57.10 ±  68.81
+  passi (azioni) con reward: positivo 6.0%, negativo 1.3%, nullo 92.6%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  optimal   100.0%    100.00 ±   0.00     96.06 ±   1.87
+  noisy      63.6%     27.30 ±  96.17     22.96 ±  82.84
+  totale     81.8%     63.65 ±  77.10     59.51 ±  69.06
+  passi (azioni) con reward: positivo 12.6%, negativo 1.3%, nullo 86.1%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  optimal:
+      2:42      3:169     4:270     5:417     6:439     7:417     8:324     9:205    10:85     11:73     12:33     13:12  
+     14:8      15:2      16:3      17:1   
+  noisy:
+      1:68      2:51      3:71      4:63      5:80      6:62      7:67      8:79      9:96     10:80     11:85     12:76  
+     13:73     14:81     15:79     16:79     17:83     18:70     19:63     20:54     21:63     22:58     23:59     24:46  
+     25:53     26:50     27:55     28:45     29:47     30:36     31:29     32:43     33:24     34:30     35:28     36:27  
+     37:22     38:21     39:27     40:20     41:14     42:18     43:16     44:14     45:12     46:13     47:15     48:11  
+     49:18     50:9      51:8      52:4      53:10     54:9      55:6      56:8      57:3      58:4      59:7      60:5   
+     61:1      62:5      63:2      64:3      65:7      66:1      67:1      68:2      69:4      70:2      71:2      74:2   
+     75:1      76:2      77:2      78:2      80:3      81:2      83:1      86:1      87:1      89:1      93:1      97:2   
+    100:2   
+
+====================================================================================================
+ task9 / medium   (task9: seq_visit(pickaxe, lava) + glob_av(door))
+====================================================================================================
+Traiettorie: 5000 | noisy: 5000 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  noisy     5000     3149 ( 63.0%)   1846 ( 36.9%)      5 (  0.1%)
+  totale    5000     3149 ( 63.0%)   1846 ( 36.9%)      5 (  0.1%)
+  passi (azioni) totali: 103899 | passi in cui arriva il reward di vittoria: 3.0% | di fallimento: 1.8%
+  fallimenti per oggetto toccato: door (D): 1846 (noisy 1846)
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  noisy      20.8       17    1  100    51
+  totale     20.8       17    1  100    51
+
+PROGRESSO E OGGETTI
+  noisy    entrate su oggetti per traiettoria:   3.8 | tipi di oggetto toccati: 2.19 | compito completato da chi non vince:  20.4% in media (1851 traiettorie)
+  totale   entrate su oggetti per traiettoria:   3.8 | tipi di oggetto toccati: 2.19 | compito completato da chi non vince:  20.4% in media (1851 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      63.0%     26.06 ±  96.49     18.43 ±  81.73
+  totale     63.0%     26.06 ±  96.49     18.43 ±  81.73
+  passi (azioni) con reward: positivo 3.0%, negativo 1.8%, nullo 95.2%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      63.0%     26.11 ±  96.49     21.89 ±  82.97
+  totale     63.0%     26.11 ±  96.49     21.89 ±  82.97
+  passi (azioni) con reward: positivo 6.8%, negativo 1.8%, nullo 91.4%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  noisy:
+      1:143     2:109     3:126     4:124     5:162     6:156     7:171     8:156     9:162    10:185    11:186    12:150 
+     13:163    14:135    15:152    16:126    17:151    18:130    19:117    20:118    21:112    22:116    23:99     24:114 
+     25:104    26:106    27:95     28:90     29:78     30:69     31:79     32:68     33:52     34:55     35:52     36:49  
+     37:47     38:47     39:29     40:42     41:44     42:49     43:31     44:37     45:32     46:26     47:36     48:32  
+     49:19     50:17     51:20     52:19     53:15     54:16     55:8      56:9      57:6      58:18     59:6      60:10  
+     61:6      62:9      63:7      64:5      65:5      66:3      67:14     68:2      69:5      70:6      71:4      72:1   
+     73:8      74:2      75:1      76:7      77:3      78:3      79:2      80:2      81:2      82:2      85:2      86:2   
+     88:1      89:1      90:2      91:2      92:1      93:2      94:1      95:1      96:2      97:1      98:1      99:2   
+    100:5   
+
+====================================================================================================
+ task9 / medium_replay   (task9: seq_visit(pickaxe, lava) + glob_av(door))
+====================================================================================================
+Traiettorie: 5000 | noisy: 2500, random: 2500 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  noisy     2500     1566 ( 62.6%)    932 ( 37.3%)      2 (  0.1%)
+  random    2500      564 ( 22.6%)   1698 ( 67.9%)    238 (  9.5%)
+  totale    5000     2130 ( 42.6%)   2630 ( 52.6%)    240 (  4.8%)
+  passi (azioni) totali: 145437 | passi in cui arriva il reward di vittoria: 1.5% | di fallimento: 1.8%
+  fallimenti per oggetto toccato: door (D): 2630 (noisy 932, random 1698)
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  noisy      20.4       17    1  100    50
+  random     37.8       29    1  100   100
+  totale     29.1       21    1  100    98
+
+PROGRESSO E OGGETTI
+  noisy    entrate su oggetti per traiettoria:   3.8 | tipi di oggetto toccati: 2.18 | compito completato da chi non vince:  18.1% in media (934 traiettorie)
+  random   entrate su oggetti per traiettoria:   5.1 | tipi di oggetto toccati: 2.11 | compito completato da chi non vince:  17.0% in media (1936 traiettorie)
+  totale   entrate su oggetti per traiettoria:   4.4 | tipi di oggetto toccati: 2.15 | compito completato da chi non vince:  17.4% in media (2870 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      62.6%     25.36 ±  96.69     17.76 ±  82.15
+  random     22.6%    -45.36 ±  83.61    -37.59 ±  64.04
+  totale     42.6%    -10.00 ±  97.06     -9.92 ±  78.68
+  passi (azioni) con reward: positivo 1.5%, negativo 1.8%, nullo 96.7%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      62.6%     25.38 ±  96.69     21.18 ±  83.61
+  random     22.6%    -42.72 ±  85.76    -32.49 ±  67.67
+  totale     42.6%     -8.67 ±  97.53     -5.65 ±  80.65
+  passi (azioni) con reward: positivo 3.6%, negativo 1.8%, nullo 94.6%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  noisy:
+      1:66      2:74      3:69      4:66      5:85      6:62      7:83      8:57      9:86     10:96     11:88     12:95  
+     13:79     14:75     15:90     16:65     17:78     18:62     19:62     20:57     21:72     22:54     23:54     24:48  
+     25:48     26:46     27:43     28:31     29:26     30:35     31:42     32:47     33:20     34:26     35:23     36:31  
+     37:25     38:23     39:22     40:14     41:25     42:15     43:28     44:19     45:12     46:4      47:9      48:12  
+     49:15     50:16     51:10     52:6      53:8      54:6      55:6      56:1      57:3      58:6      59:6      60:5   
+     61:6      62:2      63:3      64:5      65:5      66:3      67:5      68:3      69:1      70:2      71:4      72:2   
+     73:3      74:1      75:2      77:2      78:1      79:1      80:2      81:1      83:2      84:2      87:2      95:1   
+    100:2   
+  random:
+      1:94      2:58      3:68      4:65      5:63      6:53      7:58      8:51      9:52     10:43     11:40     12:40  
+     13:43     14:38     15:27     16:35     17:42     18:35     19:41     20:29     21:35     22:34     23:32     24:28  
+     25:33     26:30     27:30     28:36     29:49     30:36     31:27     32:31     33:26     34:32     35:13     36:18  
+     37:28     38:28     39:23     40:22     41:29     42:24     43:23     44:17     45:17     46:18     47:16     48:16  
+     49:20     50:23     51:12     52:11     53:9      54:19     55:18     56:12     57:12     58:20     59:7      60:13  
+     61:11     62:20     63:14     64:6      65:6      66:10     67:16     68:14     69:16     70:17     71:8      72:10  
+     73:13     74:11     75:7      76:12     77:9      78:15     79:5      80:9      81:6      82:6      83:5      84:6   
+     85:8      86:4      87:11     88:8      89:8      90:5      91:13     92:3      93:5      94:11     95:7      96:4   
+     97:5      98:6      99:6     100:242 
+
+====================================================================================================
+ task10 / medium_expert   (task10: seq_visit(pickaxe, lava) + glob_av(door) + glob_av(gem))
+====================================================================================================
+Traiettorie: 5000 | optimal: 2500, noisy: 2500 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  optimal   2500     2500 (100.0%)      0 (  0.0%)      0 (  0.0%)
+  noisy     2500     1083 ( 43.3%)   1416 ( 56.6%)      1 (  0.0%)
+  totale    5000     3583 ( 71.7%)   1416 ( 28.3%)      1 (  0.0%)
+  passi (azioni) totali: 56012 | passi in cui arriva il reward di vittoria: 6.4% | di fallimento: 2.5%
+  fallimenti per oggetto toccato: door (D): 719 (noisy 719), gem (G): 697 (noisy 697)
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  optimal     6.6        6    2   19    11
+  noisy      15.8       13    1  100    41
+  totale     11.2        7    1  100    33
+
+PROGRESSO E OGGETTI
+  optimal  entrate su oggetti per traiettoria:   2.2 | tipi di oggetto toccati: 2.00 | compito completato da chi non vince: -
+  noisy    entrate su oggetti per traiettoria:   2.6 | tipi di oggetto toccati: 1.73 | compito completato da chi non vince:  16.4% in media (1417 traiettorie)
+  totale   entrate su oggetti per traiettoria:   2.4 | tipi di oggetto toccati: 1.87 | compito completato da chi non vince:  16.4% in media (1417 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  optimal   100.0%    100.00 ±   0.00     94.56 ±   2.28
+  noisy      43.3%    -13.32 ±  99.09    -14.87 ±  86.25
+  totale     71.7%     43.34 ±  90.11     39.84 ±  81.95
+  passi (azioni) con reward: positivo 6.4%, negativo 2.5%, nullo 91.1%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  optimal   100.0%    100.00 ±   0.00     95.96 ±   1.96
+  noisy      43.3%    -13.30 ±  99.10    -12.44 ±  87.69
+  totale     71.7%     43.35 ±  90.11     41.76 ±  82.37
+  passi (azioni) con reward: positivo 13.6%, negativo 2.5%, nullo 83.8%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  optimal:
+      2:49      3:163     4:271     5:389     6:428     7:420     8:281     9:198    10:143    11:74     12:42     13:17  
+     14:12     15:10     16:2      19:1   
+  noisy:
+      1:118     2:123     3:124     4:99      5:111     6:95      7:118     8:100     9:93     10:99     11:77     12:77  
+     13:100    14:79     15:68     16:71     17:65     18:51     19:67     20:63     21:71     22:60     23:41     24:34  
+     25:31     26:37     27:39     28:25     29:25     30:24     31:26     32:19     33:22     34:23     35:18     36:21  
+     37:17     38:12     39:8      40:6      41:18     42:7      43:10     44:16     45:12     46:5      47:8      48:1   
+     49:4      50:6      51:8      52:2      53:4      54:4      55:2      56:5      58:2      59:1      61:1      62:2   
+     63:1      64:2      65:1      66:1      67:3      69:1      71:1      72:3      77:1      78:2      82:1      85:1   
+     87:1      88:1      90:1      92:1      93:1      96:1     100:1   
+
+====================================================================================================
+ task10 / medium   (task10: seq_visit(pickaxe, lava) + glob_av(door) + glob_av(gem))
+====================================================================================================
+Traiettorie: 5000 | noisy: 5000 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  noisy     5000     2153 ( 43.1%)   2843 ( 56.9%)      4 (  0.1%)
+  totale    5000     2153 ( 43.1%)   2843 ( 56.9%)      4 (  0.1%)
+  passi (azioni) totali: 79565 | passi in cui arriva il reward di vittoria: 2.7% | di fallimento: 3.6%
+  fallimenti per oggetto toccato: door (D): 1448 (noisy 1448), gem (G): 1395 (noisy 1395)
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  noisy      15.9       13    1  100    41
+  totale     15.9       13    1  100    41
+
+PROGRESSO E OGGETTI
+  noisy    entrate su oggetti per traiettoria:   2.6 | tipi di oggetto toccati: 1.73 | compito completato da chi non vince:  16.8% in media (2847 traiettorie)
+  totale   entrate su oggetti per traiettoria:   2.6 | tipi di oggetto toccati: 1.73 | compito completato da chi non vince:  16.8% in media (2847 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      43.1%    -13.80 ±  99.00    -15.37 ±  86.06
+  totale     43.1%    -13.80 ±  99.00    -15.37 ±  86.06
+  passi (azioni) con reward: positivo 2.7%, negativo 3.6%, nullo 93.7%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      43.1%    -13.78 ±  99.01    -12.91 ±  87.51
+  totale     43.1%    -13.78 ±  99.01    -12.91 ±  87.51
+  passi (azioni) con reward: positivo 6.6%, negativo 3.6%, nullo 89.8%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  noisy:
+      1:273     2:196     3:219     4:230     5:197     6:188     7:187     8:205     9:173    10:205    11:210    12:186 
+     13:179    14:172    15:176    16:131    17:132    18:130    19:122    20:109    21:88     22:97     23:96     24:78  
+     25:89     26:62     27:74     28:71     29:59     30:51     31:54     32:38     33:42     34:36     35:30     36:38  
+     37:30     38:29     39:27     40:24     41:22     42:16     43:16     44:10     45:24     46:16     47:10     48:8   
+     49:10     50:15     51:10     52:2      53:7      54:10     55:9      56:2      57:8      58:2      59:6      60:1   
+     61:7      62:6      63:4      64:5      65:4      66:1      67:1      70:1      71:3      72:2      73:5      74:3   
+     75:1      76:2      77:2      78:4      82:1      83:1      85:1      86:1      87:2      89:1      90:1     100:4   
+
+====================================================================================================
+ task10 / medium_replay   (task10: seq_visit(pickaxe, lava) + glob_av(door) + glob_av(gem))
+====================================================================================================
+Traiettorie: 5000 | noisy: 2500, random: 2500 | disposizioni diverse: 5000 | caselle di partenza diverse: 49
+
+ESITI
+  tipo         n          successo      fallimento    limite passi
+  noisy     2500     1084 ( 43.4%)   1415 ( 56.6%)      1 (  0.0%)
+  random    2500      274 ( 11.0%)   2175 ( 87.0%)     51 (  2.0%)
+  totale    5000     1358 ( 27.2%)   3590 ( 71.8%)     52 (  1.0%)
+  passi (azioni) totali: 95730 | passi in cui arriva il reward di vittoria: 1.4% | di fallimento: 3.8%
+  fallimenti per oggetto toccato: gem (G): 1806 (noisy 704, random 1102), door (D): 1784 (noisy 711, random 1073)
+
+LUNGHEZZE (passi)
+  tipo      media  mediana  min  max   95%
+  noisy      16.2       13    1  100    44
+  random     22.1       14    1  100    75
+  totale     19.1       14    1  100    59
+
+PROGRESSO E OGGETTI
+  noisy    entrate su oggetti per traiettoria:   2.6 | tipi di oggetto toccati: 1.76 | compito completato da chi non vince:  18.6% in media (1416 traiettorie)
+  random   entrate su oggetti per traiettoria:   2.5 | tipi di oggetto toccati: 1.52 | compito completato da chi non vince:  12.1% in media (2226 traiettorie)
+  totale   entrate su oggetti per traiettoria:   2.6 | tipi di oggetto toccati: 1.64 | compito completato da chi non vince:  14.6% in media (3642 traiettorie)
+
+REWARD three_value (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      43.4%    -13.24 ±  99.10    -14.81 ±  85.95
+  random     11.0%    -76.04 ±  63.36    -65.42 ±  53.08
+  totale     27.2%    -44.64 ±  88.90    -40.11 ±  75.78
+  passi (azioni) con reward: positivo 1.4%, negativo 3.8%, nullo 94.8%
+
+REWARD distance (CDR con gamma 0.99)
+  tipo          SR       reward totale                 CDR
+  noisy      43.4%    -13.22 ±  99.11    -12.31 ±  87.37
+  random     11.0%    -75.54 ±  64.15    -63.08 ±  55.38
+  totale     27.2%    -44.38 ±  89.10    -37.70 ±  77.42
+  passi (azioni) con reward: positivo 4.0%, negativo 3.8%, nullo 92.3%
+
+TRAIETTORIE PER LUNGHEZZA (lunghezza: quante)
+  noisy:
+      1:135     2:96      3:118     4:101     5:114     6:102     7:107     8:92      9:87     10:91     11:86     12:85  
+     13:69     14:89     15:75     16:85     17:69     18:65     19:49     20:61     21:60     22:47     23:47     24:35  
+     25:36     26:35     27:42     28:44     29:24     30:23     31:29     32:25     33:29     34:14     35:8      36:16  
+     37:13     38:13     39:14     40:12     41:13     42:9      43:5      44:15     45:9      46:10     47:13     48:5   
+     49:3      50:9      51:4      52:6      53:5      54:4      55:2      56:3      57:3      58:7      59:1      60:1   
+     61:3      62:1      63:2      65:1      66:1      67:3      68:4      70:3      71:2      73:1      74:1      75:1   
+     76:3      81:1      85:1      86:1      92:1     100:1   
+  random:
+      1:162     2:132     3:124     4:111     5:111     6:95      7:75      8:85      9:62     10:64     11:73     12:58  
+     13:64     14:49     15:62     16:45     17:48     18:49     19:37     20:46     21:39     22:46     23:41     24:34  
+     25:32     26:27     27:27     28:24     29:33     30:39     31:22     32:23     33:26     34:18     35:19     36:18  
+     37:24     38:13     39:14     40:17     41:18     42:20     43:13     44:19     45:9      46:15     47:12     48:9   
+     49:13     50:13     51:9      52:7      53:5      54:7      55:9      56:4      57:7      58:5      59:5      60:6   
+     61:6      62:6      63:10     64:6      65:5      66:9      67:2      68:6      69:6      70:4      71:5      72:6   
+     73:5      74:2      75:5      76:3      77:4      78:5      79:2      80:3      81:5      82:3      83:2      84:2   
+     85:1      86:5      87:2      88:5      89:3      90:1      91:1      92:3      94:4      95:2      96:3      97:5   
+     98:2      99:6     100:52  
+
+====================================================================================================
+ RIEPILOGO (tutte le traiettorie di ogni dataset)
+====================================================================================================
+task   dataset             SR  fall.  limite  lungh.     three_value reward / CDR        distance reward / CDR
+task1  medium_expert    99.8%   0.0%    0.2%    14.9          99.80 /     87.79          99.88 /     91.36
+task2  medium_expert    99.8%   0.0%    0.2%    19.2          99.78 /     84.36          99.91 /     90.32
+task3  medium_expert    99.7%   0.0%    0.3%    17.4          99.66 /     85.78          99.78 /     89.04
+task4  medium_expert    98.7%   0.0%    1.3%    27.4          98.74 /     78.10          99.64 /     86.56
+task5  medium_expert    99.4%   0.0%    0.6%    22.0          99.40 /     82.22          99.77 /     88.54
+task6  medium_expert    99.2%   0.0%    0.8%    25.0          99.22 /     79.85          99.77 /     88.18
+task7  medium_expert    84.2%  15.8%    0.0%    12.2          68.34 /     61.89          68.35 /     64.72
+task8  medium_expert    74.5%  25.4%    0.0%    10.1          49.10 /     45.47          49.11 /     47.71
+task9  medium_expert    81.8%  18.2%    0.0%    13.6          63.64 /     57.10          63.65 /     59.51
+task10 medium_expert    71.7%  28.3%    0.0%    11.2          43.34 /     39.84          43.35 /     41.76
+
+task1  medium           99.8%   0.0%    0.2%    23.9          99.82 /     80.32          99.91 /     86.10
+task2  medium           99.6%   0.0%    0.4%    31.0          99.56 /     74.91          99.85 /     84.77
+task3  medium           99.6%   0.0%    0.4%    28.7          99.56 /     76.78          99.77 /     82.05
+task4  medium           97.7%   0.0%    2.3%    44.7          97.74 /     64.98          99.31 /     78.43
+task5  medium           98.9%   0.0%    1.1%    35.2          98.86 /     71.80          99.55 /     81.59
+task6  medium           98.6%   0.0%    1.4%    41.0          98.64 /     67.63          99.62 /     80.95
+task7  medium           68.1%  31.9%    0.1%    18.2          36.18 /     28.05          36.21 /     32.20
+task8  medium           48.8%  51.1%    0.1%    14.4          -2.36 /     -4.80          -2.32 /     -1.73
+task9  medium           63.0%  36.9%    0.1%    20.8          26.06 /     18.43          26.11 /     21.89
+task10 medium           43.1%  56.9%    0.1%    15.9         -13.80 /    -15.37         -13.78 /    -12.91
+
+task1  medium_replay    84.4%   0.0%   15.6%    44.0          84.36 /     62.41          91.22 /     73.92
+task2  medium_replay    78.1%   0.0%   21.9%    52.4          78.08 /     54.63          90.99 /     73.47
+task3  medium_replay    77.2%   0.0%   22.8%    51.2          77.18 /     55.39          84.03 /     64.89
+task4  medium_replay    63.4%   0.0%   36.6%    67.6          63.38 /     40.20          83.66 /     63.16
+task5  medium_replay    72.3%   0.0%   27.7%    58.6          72.32 /     48.79          86.45 /     67.21
+task6  medium_replay    68.9%   0.0%   31.1%    63.5          68.92 /     44.50          87.61 /     68.15
+task7  medium_replay    48.5%  47.8%    3.7%    26.0           0.66 /     -1.25           2.18 /      4.33
+task8  medium_replay    31.7%  67.4%    0.8%    17.9         -35.68 /    -32.63         -35.30 /    -29.18
+task9  medium_replay    42.6%  52.6%    4.8%    29.1         -10.00 /     -9.92          -8.67 /     -5.65
+task10 medium_replay    27.2%  71.8%    1.0%    19.1         -44.64 /    -40.11         -44.38 /    -37.70
+

@@ -124,7 +124,7 @@ STATE_TYPES = ["symbolic", "image"]
 REWARD_TYPES = ["three_value", "distance"]
 TASKS = range(1, 11)
 DATASETS = ["medium_expert", "medium", "medium_replay"]
-SEEDS = [0, 1, 2]
+SEEDS = [0]
 # se False, i run gia' completati (log con il risultato finale sul test) vengono saltati
 # (utile per riprendere una batteria interrotta); se True si rifa' tutto
 OVERWRITE = False
