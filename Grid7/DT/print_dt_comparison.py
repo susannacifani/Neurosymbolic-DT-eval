@@ -18,7 +18,7 @@ import pandas as pd
 # =====================================================================
 K_SHORT = 50              # contesto usato negli esperimenti (cartelle K<k>); se uguale a K_FULL
                           # la riga "DT, K=<K_SHORT>" non compare (sarebbe un doppione di quella standard)
-SEEDS = [0]              # es. [0] oppure [0, 1, 2]; None = tutti i seed trovati
+SEEDS = None             # es. [0] oppure [0, 1, 2]; None = tutti i seed trovati
 SHOW_PER_DATASET = True  # dopo la tabella su tutti i dataset, una tabella per ogni dataset
 # =====================================================================
 
@@ -36,7 +36,7 @@ APPROACHES = [
     (f"DT, K={K_FULL}", [DT_ROOT]),
     (f"DT, K={K_SHORT}", [DT_ROOT / "context_ablation" / f"K{K_SHORT}"]),
     (f"DT, K={K_SHORT} + NRM", [DT_ROOT / "automaton_state" / "grounder" / f"K{K_SHORT}"]),
-    #(f"DT, K={K_SHORT} + automa vero", [DT_ROOT / "automaton_state" / "true" / f"K{K_SHORT}"]),
+    (f"DT, K={K_SHORT} + automa vero", [DT_ROOT / "automaton_state" / "true" / f"K{K_SHORT}"]),
 ]
 if K_SHORT == K_FULL:
     APPROACHES.pop(1)

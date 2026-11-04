@@ -33,6 +33,10 @@ from pathlib import Path
 
 # necessario per gli algoritmi deterministici di cuBLAS (va impostato prima di usare la GPU)
 os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
+# memoria della GPU in segmenti espandibili: senza, la memoria riservata si frammenta (fino a 11.5 GB
+# riservati per 4.7 GB usati) e quella in eccesso finisce nella RAM, con epoch fino a 10 volte piu' lente.
+# Cambia solo come si alloca la memoria, non i calcoli: stessi pesi, bit per bit
+os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
 
 import h5py
 import numpy as np

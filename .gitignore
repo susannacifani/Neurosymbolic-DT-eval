@@ -1,19 +1,33 @@
-
+# ambiente Python e editor
 venv/
+.venv/
 __pycache__/
 *.pyc
-
-
 .vscode/
 
+# log dei lanci (l'output di ogni run e' gia' nella sua cartella log/, anch'essa esclusa)
+*.log
+
+# dataset (4x4: Dataset/<State>/<reward>/, 7x7: Dataset/<reward>/)
 Grid*/Dataset/Symbolic/
 Grid*/Dataset/Image/
+Grid*/Dataset/distance/
+Grid*/Dataset/three_value/
+Grid*/Dataset/old_*/
+
+# modelli allenati, log e valutazioni di ogni run
 Grid*/DT/Symbolic/
 Grid*/DT/Image/
 Grid*/Grounding/Symbolic/
 Grid*/Grounding/Image/
 Grid*/WorldModel/Symbolic/
 Grid*/WorldModel/Image/
+Grid*/DT/context_ablation/
+Grid*/DT/automaton_state/
+Grid*/DT/encoder_ablation/
+Grid*/DT/old_config/
+Grid*/DT/old_nondeterministic/
+Grid*/Grounding/old_*/
 
 *.h5
 *.tmp
@@ -22,10 +36,9 @@ Grid*/WorldModel/Image/
 *.pt
 *.pth
 
+# tabelle LaTeX dei risultati (si rigenerano con gli script latex_*.py)
+Grid*/DT/latex/
+Grid*/Grounding/latex/
 
-Grid*/DT/context_ablation/
-Grid*/DT/automaton_state/
-Grid*/DT/encoder_ablation/
-Grid*/DT/old_config/
-Grid*/DT/old_nondeterministic/
-Grid*/Dataset/old_*/
+# world model del 7x7: copia di quello della 4x4, ancora da adattare
+Grid7/WorldModel/

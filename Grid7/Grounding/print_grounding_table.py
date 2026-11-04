@@ -19,6 +19,14 @@ import numpy as np
 #   simmetrie della formula, cioe' solo su cio' che dai reward si puo' davvero distinguere
 # Ogni numero e' media +- deviazione standard tra i seed (con un solo seed c'e' solo la media).
 
+# =====================================================================
+# CONFIGURAZIONE: modifica qui cosa stampare, poi premi Run
+# =====================================================================
+# es. [0] oppure [0, 1, 2]; None = tutti i seed trovati. Per confrontare Symbolic e Image servono gli
+# stessi seed per entrambi
+SEEDS_DEFAULT = None
+# =====================================================================
+
 # ordine dei blocchi: prima Symbolic, poi Image sotto;
 # dentro ciascuno, da sinistra a destra, prima three_value poi distance
 CONFIGS = [
@@ -43,7 +51,10 @@ def find_seeds():
     return sorted({int(p.name[4:]) for p in GROUNDING_ROOT.glob("*/*/task*/seed*") if p.name[4:].isdigit()})
 
 
-SEEDS = [int(x) for x in sys.argv[1].split(",")] if len(sys.argv) > 1 else find_seeds()
+if len(sys.argv) > 1:
+    SEEDS = [int(x) for x in sys.argv[1].split(",")]
+else:
+    SEEDS = list(SEEDS_DEFAULT) if SEEDS_DEFAULT is not None else find_seeds()
 
 
 def parse_log(path):

@@ -13,7 +13,7 @@ STATE_TYPES = ["symbolic", "image"]
 REWARD_TYPES = ["three_value", "distance"]
 TASKS = range(1,11)
 DATASETS = ["medium_expert", "medium", "medium_replay"]
-SEEDS = [0]
+SEEDS = [0, 1, 2]
 
 DO_TRAIN = True
 DO_EVAL = True
