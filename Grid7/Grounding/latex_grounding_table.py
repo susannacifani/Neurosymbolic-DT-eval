@@ -1,9 +1,9 @@
 """Tabella LaTeX dei risultati del grounding (gli stessi numeri di print_grounding_table.py).
 
-Una sola tabella: righe = task, prima il blocco Symbolic e poi il blocco Image, ognuno con la sua riga
-Mean; colonne = three-value e distance, per ognuno medium-expert, medium e medium-replay.
-In ogni cella media +- deviazione standard tra i seed; nella riga Mean la media sui task (delle medie
-tra i seed).
+Una sola tabella: righe = task, prima il blocco Symbolic (task 1-10, poi le medie sui task 1-6 e 7-10) e poi
+il blocco Image (solo i task con risultati); colonne = three-value e distance, per ognuno medium-expert, medium
+e medium-replay. In ogni cella media +- deviazione standard tra i seed; nelle medie, tra i seed delle medie sui
+task del gruppo.
 La tabella viene scritta in un file .txt (in Grounding/latex/) da cui si incolla nel documento;
 servono \\usepackage{booktabs,graphicx}.
 
@@ -26,6 +26,9 @@ STATE_TYPES = [("Symbolic", "Symbolic States"), ("Image", "Image States")]
 REWARD_TYPES = [("three_value", "Three-Value Reward"), ("distance", "Distance Reward")]
 DATASETS = [("medium_expert", "medium-expert"), ("medium", "medium"), ("medium_replay", "medium-replay")]
 TASKS = range(1, 11)
+# righe di media (solo nei blocchi che hanno tutti i task del gruppo)
+GROUPS = [("\\shortstack[l]{Mean\\\\(tasks 1--6)}", [1, 2, 3, 4, 5, 6]),
+          ("\\shortstack[l]{Mean\\\\(tasks 7--10)}", [7, 8, 9, 10])]
 
 # risultati del grounding: Grounding/<State>/<reward>/task<N>/seed<S>/log/log_<dataset>.txt
 GROUNDING_ROOT = Path(__file__).resolve().parent
@@ -76,31 +79,41 @@ def fmt(values):
     return f"${np.mean(values):.1f}${{\\scriptsize$\\pm {np.std(values, ddof=1):.1f}$}}"
 
 
+def per_seed(state_type, reward_type, tasks, dataset):
+    """per ogni seed con tutti i task, la media sui task"""
+    out = []
+    for s in SEEDS:
+        values = [value(state_type, reward_type, t, s, dataset) for t in tasks]
+        if None not in values:
+            out.append(float(np.mean(values)))
+    return out
+
+
 def block(state_type, title):
-    """righe LaTeX di un tipo di stato (task e Mean) e numero di run mancanti"""
+    """righe LaTeX di un tipo di stato (task con risultati, poi le medie dei GROUPS se ci sono tutti i task)"""
     lines = [f"\\multicolumn{{7}}{{c}}{{\\textbf{{Configuration: {title}}}}} \\\\", r"\midrule"]
-    task_means = {(rt, ds): [] for rt, _ in REWARD_TYPES for ds, _ in DATASETS}
-    missing = 0
-    for task in TASKS:
-        cells = []
-        for rt, _ in REWARD_TYPES:
-            for ds, _ in DATASETS:
-                values = [v for s in SEEDS if (v := value(state_type, rt, task, s, ds)) is not None]
-                missing += len(SEEDS) - len(values)
-                cells.append(fmt(values))
-                if values:
-                    task_means[(rt, ds)].append(np.mean(values))
+    tasks = [t for t in TASKS if any(value(state_type, rt, t, s, ds) is not None
+                                     for rt, _ in REWARD_TYPES for ds, _ in DATASETS for s in SEEDS)]
+    for task in tasks:
+        cells = [fmt(per_seed(state_type, rt, [task], ds)) for rt, _ in REWARD_TYPES for ds, _ in DATASETS]
         lines.append(f"{task} & " + " & ".join(cells) + r" \\")
-    means = [f"\\textbf{{{np.mean(m):.1f}}}" if m else "--" for m in task_means.values()]
-    lines += [r"\midrule", "Mean & " + " & ".join(means) + r" \\"]
-    return lines, missing
+    groups = [(label, g) for label, g in GROUPS if set(g) <= set(tasks)]
+    for i, (label, group) in enumerate(groups):
+        cells = [fmt(per_seed(state_type, rt, group, ds)) for rt, _ in REWARD_TYPES for ds, _ in DATASETS]
+        lines += ([r"\midrule"] if i == 0 else []) + [f"{label} & " + " & ".join(cells) + r" \\"]
+    return lines, tasks
 
 
 def table():
     seeds_text = ", ".join(map(str, SEEDS))
-    seed_part = (f" Mean $\\pm$ std over {len(SEEDS)} seeds ({seeds_text}); Mean row: average over the "
-                 f"{len(TASKS)} tasks." if len(SEEDS) > 1 else f" Seed {seeds_text}; Mean row: average over the "
-                 f"{len(TASKS)} tasks.")
+    blocks = [(st, title, *block(st, title)) for st, title in STATE_TYPES]
+    blocks = [b for b in blocks if b[3]]
+    image = next((tasks for st, _, _, tasks in blocks if st == "Image"), [])
+    seed_part = ((f" Mean $\\pm$ std over {len(SEEDS)} seeds ({seeds_text})" if len(SEEDS) > 1
+                  else f" Seed {seeds_text}")
+                 + "; the last rows of the symbolic block average over tasks 1--6 and over tasks 7--10, with the "
+                   "std over seeds of the per-seed average."
+                 + (f" Image states: only tasks {' and '.join(map(str, image))} (--: not run)." if image else ""))
     lines = [
         r"\begin{table}[p]",
         r"\centering",
@@ -115,24 +128,19 @@ def table():
         r"\textbf{Task} & " + " & ".join(f"\\textbf{{{name}}}" for _ in REWARD_TYPES for _, name in DATASETS) + r" \\",
         r"\midrule",
     ]
-    missing = {}
-    for i, (state_type, title) in enumerate(STATE_TYPES):
+    for i, (_, _, rows, _) in enumerate(blocks):
         if i > 0:
             lines.append(r"\midrule[\heavyrulewidth]")
-        rows, missing[state_type] = block(state_type, title)
         lines += rows
     lines += [r"\bottomrule", r"\end{tabular}}", r"\end{table}"]
-    return "\n".join(lines), missing
+    return "\n".join(lines)
 
 
 if __name__ == "__main__":
     out = Path(OUTPUT) if OUTPUT else GROUNDING_ROOT / "latex" / f"grounder_{METRIC}.txt"
     out.parent.mkdir(parents=True, exist_ok=True)
-    tex, missing = table()
+    tex = table()
     header = (f"% Grounding, {METRIC} accuracy, seed {', '.join(map(str, SEEDS))} - generato da "
               f"Grounding/latex_grounding_table.py\n% servono \\usepackage{{booktabs,graphicx}}\n")
     out.write_text(header + tex + "\n")
-    for state_type, n in missing.items():
-        if n:
-            print(f"ATTENZIONE {state_type}: mancano {n} run (task x dataset x seed x reward)")
     print(f"Grounding {METRIC}, seed {SEEDS}: tabella scritta in {out}")

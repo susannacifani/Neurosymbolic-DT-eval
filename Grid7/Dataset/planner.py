@@ -6,9 +6,6 @@ es. toccare un oggetto da evitare) non si possono attraversare; ci si ferma al p
 accettante. La BFS trova sempre un percorso di lunghezza minima, per qualunque formula e
 disposizione. Tra i percorsi minimi ne sceglie uno a caso (rng), cosi' i dataset "expert" non
 contengono sempre lo stesso percorso.
-
-Sostituisce DijkstraTraj.py della griglia 4x4, che conteneva percorsi scritti a mano per le
-posizioni fisse degli oggetti.
 """
 from collections import deque
 

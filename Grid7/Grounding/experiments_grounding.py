@@ -1,13 +1,16 @@
 """Batteria di training dei grounder (Neural Reward Machine) per la griglia 7x7.
 
 Per ogni combinazione allena il grounder solo dai reward e lo valuta sul test (vedi grounder.py).
-Risultati in Grounding/<State>/<reward>/task<N>/seed<S>/{grounder,log}/
+Risultati in Grounding/<State>/<reward>/task<N>/seed<S>/{grounder,log}/; li usa DT+NRM
+(DT/experiments_dt_automaton.py con AUTOMATON = "grounder"), con lo stesso task, dataset e seed.
 Tabella: python3 Grid7/Grounding/print_grounding_table.py
-I grounder servono poi al DT con lo stato dell'automa predetto (DT/experiments_dt_automaton.py con
-AUTOMATON = "grounder"), che usa il grounder dello stesso task, dataset e seed.
+Uso: imposta la CONFIGURAZIONE e premi Run, oppure
+    python3 Grounding/experiments_grounding.py [reward1,...] [task1,...] [dataset1,...] [state1,...]
+(gli argomenti mancanti prendono i valori della configurazione)
 """
 import gc
 import multiprocessing as mp
+import sys
 import traceback
 
 import torch
@@ -15,19 +18,16 @@ import torch
 from grounder import grounder_path, log_path, train_grounder
 
 # =====================================================================
-# CONFIGURAZIONE: modifica qui cosa lanciare, poi premi Run
+# CONFIGURAZIONE
 # =====================================================================
 STATE_TYPES = ["symbolic", "image"]
 REWARD_TYPES = ["three_value", "distance"]
 TASKS = range(1, 11)
 DATASETS = ["medium_expert", "medium", "medium_replay"]
 SEEDS = [0, 1, 2]
-# se False, i run gia' completati (modello + log con il risultato sul test) vengono saltati
-# (utile per riprendere una batteria interrotta); se True si rifa' tutto
+# se False, i run gia' completati vengono saltati (per riprendere una batteria interrotta)
 OVERWRITE = False
-# run symbolic eseguiti in contemporanea (processi separati che prendono i run da una lista unica).
-# Con 3 i run symbolic vanno circa 2 volte piu' veloci in tutto (misurato, stessi pesi bit per bit);
-# i run image vanno sempre uno alla volta, prima dei symbolic: uno usa gia' tutta la GPU
+# run symbolic in contemporanea; i run image vanno uno alla volta (uno usa gia' tutta la GPU)
 NUM_WORKERS_SYMBOLIC = 3
 # =====================================================================
 
@@ -62,13 +62,16 @@ def job_name(job):
 
 
 if __name__ == "__main__":
+    REWARD_TYPES = sys.argv[1].split(",") if len(sys.argv) > 1 else REWARD_TYPES
+    TASKS = [int(t) for t in sys.argv[2].split(",")] if len(sys.argv) > 2 else TASKS
+    DATASETS = sys.argv[3].split(",") if len(sys.argv) > 3 else DATASETS
+    STATE_TYPES = sys.argv[4].split(",") if len(sys.argv) > 4 else STATE_TYPES
     jobs = [(st, rt, task, ds, seed) for st in STATE_TYPES for rt in REWARD_TYPES for task in TASKS
             for ds in DATASETS for seed in SEEDS]
     results = dict(run_job(job) for job in jobs if job[0] == "image")
     symbolic = [job for job in jobs if job[0] == "symbolic"]
     if NUM_WORKERS_SYMBOLIC > 1:
-        # "spawn": ogni processo inizializza la GPU da zero (necessario con CUDA); un processo nuovo
-        # per ogni run, cosi' la memoria della GPU non si accumula da un run all'altro
+        # "spawn": ogni processo inizializza la GPU da zero; un processo nuovo per ogni run
         with mp.get_context("spawn").Pool(NUM_WORKERS_SYMBOLIC, maxtasksperchild=1) as pool:
             results |= dict(pool.imap_unordered(run_job, symbolic))
     else:

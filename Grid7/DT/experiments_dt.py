@@ -1,47 +1,52 @@
+"""Batteria del Decision Transformer standard (senza stato dell'automa).
+
+Per ogni combinazione: training (MAX_EPOCHS epoch fisse) e valutazione del modello finale e di quelli
+alle epoch SAVE_EPOCHS. Risultati in DT/<State>/<reward>/task<N>/seed<S>/ (vedi decision_transformer.py).
+Uso: imposta la CONFIGURAZIONE e premi Run.
+"""
 import gc
 import multiprocessing as mp
 import traceback
 
 import torch
 
-from decision_transformer import evaluate, output_paths, train
+from decision_transformer import SAVE_EPOCHS, evaluate, output_paths, run_dir, train
 
 # =====================================================================
-# CONFIGURAZIONE: modifica qui cosa lanciare, poi premi Run
+# CONFIGURAZIONE
 # =====================================================================
 STATE_TYPES = ["symbolic", "image"]
 REWARD_TYPES = ["three_value", "distance"]
-TASKS = range(1,11)
+TASKS = range(1, 11)
 DATASETS = ["medium_expert", "medium", "medium_replay"]
 SEEDS = [0, 1, 2]
-
-DO_TRAIN = True
-DO_EVAL = True
-# se False, le combinazioni con modello / valutazione gia' presenti vengono saltate
-# (utile per riprendere una batteria interrotta); se True si rifa' tutto
+# se False, i run gia' completati vengono saltati (per riprendere una batteria interrotta)
 OVERWRITE = False
-# numero di run eseguiti in contemporanea (processi separati che prendono i run da una lista unica).
-# Con una sola GPU conviene 1: un run image la usa gia' al 100%, quindi 2 run insieme vanno ciascuno
-# a meno della meta' della velocita' (misurato), e con 3 la memoria della GPU si satura. Serve solo
-# con piu' GPU o per molti run symbolic, che la usano poco.
+# run in contemporanea (processi separati); con una GPU sola conviene 1 per image
 NUM_WORKERS = 1
 # =====================================================================
 
 
+def run_case(state_type, reward_type, task, dataset, seed, base, automaton=None):
+    """training + valutazione del modello finale e di quelli intermedi; restituisce il success rate finale"""
+    dirs = [base] + [base / f"epoch{e:03d}" for e in SAVE_EPOCHS]
+    if OVERWRITE or not output_paths(state_type, reward_type, task, dataset, seed, base)["model"].exists():
+        train(state_type, reward_type, task, dataset, seed=seed, out_dir=base, automaton=automaton)
+    results = {}
+    for d in dirs:
+        summary = output_paths(state_type, reward_type, task, dataset, seed, d)["summary"]
+        if OVERWRITE or not summary.exists():
+            results[d] = evaluate(state_type, reward_type, task, dataset, seed=seed, out_dir=d)["success_rate"]
+    return results.get(base)
+
+
 def run_job(job):
-    """un run (training + valutazione); restituisce (nome, esito)"""
     state_type, reward_type, task, dataset, seed = job
     name = f"{state_type} / {reward_type} / task{task} / {dataset} / seed{seed}"
     print(f"\n{'=' * 70}\n {name}\n{'=' * 70}", flush=True)
-    paths = output_paths(state_type, reward_type, task, dataset, seed)
     try:
-        if DO_TRAIN and (OVERWRITE or not paths["model"].exists()):
-            train(state_type, reward_type, task, dataset, seed=seed)
-        if DO_EVAL and (OVERWRITE or not paths["csv"].exists()):
-            res = evaluate(state_type, reward_type, task, dataset, seed=seed)
-            result = f"{res['success_rate']:.1f}%"
-        else:
-            result = "saltato (gia' presente)"
+        sr = run_case(state_type, reward_type, task, dataset, seed, run_dir(state_type, reward_type, task, seed))
+        result = "saltato (gia' presente)" if sr is None else f"{sr:.1f}%"
     except Exception:
         traceback.print_exc()
         result = "FAILED"
@@ -54,8 +59,6 @@ def run_job(job):
 if __name__ == "__main__":
     jobs = [(st, rt, task, ds, seed) for st in STATE_TYPES for rt in REWARD_TYPES for task in TASKS
             for ds in DATASETS for seed in SEEDS]
-    # prima i run image (i piu' lunghi), cosi' alla fine non resta un solo processo a lavorare
-    jobs.sort(key=lambda job: job[0] != "image")
     if NUM_WORKERS > 1:
         # "spawn": ogni processo inizializza la GPU da zero (necessario con CUDA)
         with mp.get_context("spawn").Pool(NUM_WORKERS) as pool:
@@ -63,7 +66,7 @@ if __name__ == "__main__":
     else:
         results = dict(run_job(job) for job in jobs)
 
-    print(f"\n{'=' * 70}\n SUMMARY - success rate\n{'=' * 70}")
-    for job in sorted(jobs):
+    print(f"\n{'=' * 70}\n SUMMARY - success rate del modello finale\n{'=' * 70}")
+    for job in jobs:
         name = f"{job[0]} / {job[1]} / task{job[2]} / {job[3]} / seed{job[4]}"
         print(f"{name:<55} {results[name]}")

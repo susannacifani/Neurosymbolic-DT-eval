@@ -25,6 +25,7 @@ Grid*/WorldModel/Image/
 Grid*/DT/context_ablation/
 Grid*/DT/automaton_state/
 Grid*/DT/encoder_ablation/
+Grid*/DT/*.log
 Grid*/DT/old_config/
 Grid*/DT/old_nondeterministic/
 Grid*/Grounding/old_*/
@@ -39,6 +40,13 @@ Grid*/Grounding/old_*/
 # tabelle LaTeX dei risultati (si rigenerano con gli script latex_*.py)
 Grid*/DT/latex/
 Grid*/Grounding/latex/
+Grid*/Dataset/latex/
 
 # world model del 7x7: copia di quello della 4x4, ancora da adattare
 Grid7/WorldModel/
+
+# Trajectory Transformer del 7x7: in sviluppo
+Grid7/TT/
+
+# esperimenti esplorativi (altri numeri di mappe, contesto, early stopping, ...): codice e risultati
+Grid*/old_experiments/

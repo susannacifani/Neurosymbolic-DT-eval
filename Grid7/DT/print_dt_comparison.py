@@ -1,12 +1,10 @@
-"""Confronto a colpo d'occhio tra i diversi approcci del Decision Transformer.
+"""Confronto tra DT, DT+NRM e DT+Oracle.
 
-Righe: per ogni task, una riga per approccio (DT standard, DT con contesto corto, DT + stato
-dell'automa dal grounder (NRM), DT + stato vero dell'automa); in fondo la media sui task.
-Colonne: Symbolic e Image, ognuno con three_value e distance; per ciascuno Reward, CDR e SR.
-Una tabella con la media sui dataset e (opzionale) una per ogni dataset; con piu' seed, media +-
-deviazione standard tra i seed (calcolata sulle medie di ogni seed).
-
-Uso: imposta la CONFIGURAZIONE qui sotto e premi Run.
+Righe: per ogni task una riga per approccio, in fondo la media sui task. Colonne: Symbolic e Image,
+ognuno con three_value e distance; per ciascuno Reward, CDR e SR. Una tabella con la media sui dataset
+e (opzionale) una per dataset; con piu' seed, media +- deviazione standard tra i seed (delle medie di
+ogni seed).
+Uso: imposta la CONFIGURAZIONE e premi Run.
 """
 from pathlib import Path
 
@@ -14,11 +12,10 @@ import numpy as np
 import pandas as pd
 
 # =====================================================================
-# CONFIGURAZIONE: modifica qui cosa stampare, poi premi Run
+# CONFIGURAZIONE
 # =====================================================================
-K_SHORT = 50              # contesto usato negli esperimenti (cartelle K<k>); se uguale a K_FULL
-                          # la riga "DT, K=<K_SHORT>" non compare (sarebbe un doppione di quella standard)
-SEEDS = None             # es. [0] oppure [0, 1, 2]; None = tutti i seed trovati
+SEEDS = None             # es. [0, 1, 2]; None = tutti i seed trovati
+EPOCH = 200              # 200 = modelli finali; 50, 100 o 150 = modelli intermedi
 SHOW_PER_DATASET = True  # dopo la tabella su tutti i dataset, una tabella per ogni dataset
 # =====================================================================
 
@@ -27,19 +24,15 @@ STATE_TYPES = ["Symbolic", "Image"]
 REWARD_TYPES = ["three_value", "distance"]
 DATASETS = ["medium_expert", "medium", "medium_replay"]
 NUM_TASKS = 10
-K_FULL = 50               # contesto del DT standard (CONTEXT_LEN in decision_transformer.py)
 COL_GAP = 2
 GROUP_GAP = 4
+EVAL_DIR = "eval" if EPOCH == 200 else f"epoch{EPOCH:03d}/eval"
 
-# (etichetta, cartelle dei risultati); il DT standard e' in DT/<State>
 APPROACHES = [
-    (f"DT, K={K_FULL}", [DT_ROOT]),
-    (f"DT, K={K_SHORT}", [DT_ROOT / "context_ablation" / f"K{K_SHORT}"]),
-    (f"DT, K={K_SHORT} + NRM", [DT_ROOT / "automaton_state" / "grounder" / f"K{K_SHORT}"]),
-    (f"DT, K={K_SHORT} + automa vero", [DT_ROOT / "automaton_state" / "true" / f"K{K_SHORT}"]),
+    ("DT", DT_ROOT),
+    ("DT+NRM", DT_ROOT / "automaton_state" / "grounder"),
+    ("DT+Oracle", DT_ROOT / "automaton_state" / "true"),
 ]
-if K_SHORT == K_FULL:
-    APPROACHES.pop(1)
 METRICS = [("Reward", lambda d: d["reward_puro"].mean()),
            ("CDR", lambda d: d["discounted_reward"].mean()),
            ("SR", lambda d: 100.0 * d["success"].mean())]
@@ -47,28 +40,23 @@ METRICS = [("Reward", lambda d: d["reward_puro"].mean()),
 
 def find_seeds():
     seeds = set()
-    for _, roots in APPROACHES:
-        for root in roots:
-            seeds |= {int(p.name[4:]) for p in root.glob("*/*/task*/seed*") if p.name[4:].isdigit()}
+    for _, root in APPROACHES:
+        seeds |= {int(p.name[4:]) for p in root.glob("*/*/task*/seed*") if p.name[4:].isdigit()}
     return sorted(seeds)
 
 
 SEEDS = SEEDS if SEEDS is not None else find_seeds()
 
 
-def load(roots, state_type, reward_type, tasks, datasets):
-    """per ogni seed, la media della metrica sui task e dataset scelti; si usa la prima cartella in
-    cui ci sono risultati"""
-    for root in roots:
-        per_seed = {}
-        for seed in SEEDS:
-            frames = [pd.read_csv(f) for task in tasks for ds in datasets
-                      if (f := root / state_type / reward_type / f"task{task}" / f"seed{seed}" / "eval" / f"eval_{ds}.csv").exists()]
-            if frames:
-                per_seed[seed] = {name: np.mean([fn(d) for d in frames]) for name, fn in METRICS} | {"n": len(frames)}
-        if per_seed:
-            return per_seed
-    return {}
+def load(root, state_type, reward_type, tasks, datasets):
+    """per ogni seed, la media della metrica sui task e dataset scelti"""
+    per_seed = {}
+    for seed in SEEDS:
+        frames = [pd.read_csv(f) for task in tasks for ds in datasets
+                  if (f := root / state_type / reward_type / f"task{task}" / f"seed{seed}" / EVAL_DIR / f"eval_{ds}.csv").exists()]
+        if frames:
+            per_seed[seed] = {name: np.mean([fn(d) for d in frames]) for name, fn in METRICS} | {"n": len(frames)}
+    return per_seed
 
 
 def fmt(values):
@@ -86,11 +74,11 @@ def table(datasets, title):
     groups = [(f"task{t}", [t]) for t in range(1, NUM_TASKS + 1)] + [("media", list(range(1, NUM_TASKS + 1)))]
     rows, notes = [], set()
     for group, tasks in groups:
-        for i, (label, roots) in enumerate(APPROACHES):
+        for i, (label, root) in enumerate(APPROACHES):
             row = {}
             for st in STATE_TYPES:
                 for rt in REWARD_TYPES:
-                    per_seed = load(roots, st, rt, tasks, datasets)
+                    per_seed = load(root, st, rt, tasks, datasets)
                     runs = sum(v["n"] for v in per_seed.values())
                     expected = len(SEEDS) * len(tasks) * len(datasets)
                     for m, _ in METRICS:
@@ -145,7 +133,7 @@ def table(datasets, title):
 
 
 def main():
-    print(f"DECISION TRANSFORMER - confronto tra approcci - seed {', '.join(map(str, SEEDS))}")
+    print(f"DECISION TRANSFORMER - confronto tra approcci - epoch {EPOCH} - seed {', '.join(map(str, SEEDS))}")
     print("Reward = reward media dell'episodio | CDR = cumulative discounted reward (gamma 0.99) | SR = success rate (0-100)")
     print("NRM (grounder) = stato dell'automa calcolato con i simboli del grounder allenato solo dai reward")
     table(DATASETS, "Tutti i dataset (media sui 3 dataset)")

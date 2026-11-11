@@ -1,25 +1,19 @@
-"""Grounder (Neural Reward Machine) per la griglia 7x7 con oggetti in posizioni casuali.
+"""Grounder (Neural Reward Machine) per la griglia 7x7.
 
-Stesso metodo della 4x4 (Grid4/NeuralRewardMachines/RL/A2C_nrm.py), adattato ai nuovi dati:
+Stesso metodo della 4x4 (Grid4/NeuralRewardMachines/RL/A2C_nrm.py):
 - il grounder e' un classificatore che riceve l'osservazione intera (mappa (5, 7, 7) per symbolic,
-  immagine (3, 112, 112) per image) e restituisce una distribuzione sui 5 simboli (P, L, D, G, vuoto):
+  immagine (3, 112, 112) per image) e restituisce una distribuzione sui 5 simboli (P, L, D, G, vuoto),
   il simbolo della casella in cui si trova l'agente;
 - si allena SOLO dai reward: la sequenza dei simboli predetti passa nell'automa della formula
   (ProbabilisticAutoma inizializzato dal DFA, normalizzato, congelato), che prevede a ogni passo la
-  classe di reward (il potenziale dello stato dell'automa); la loss e' la NLL della classe vera,
-  con pesi per classe 1/frequenza (le classi sono molto sbilanciate);
-- etichette: classe di reward di ogni osservazione della traiettoria, compresa quella finale (dopo
-  l'ultima azione), che e' l'unico punto in cui compaiono vittoria e fallimento;
+  classe di reward (il potenziale dello stato dell'automa); loss = NLL della classe vera, con pesi per
+  classe 1/frequenza;
+- etichette: classe di reward di ogni osservazione della traiettoria, compresa quella finale;
 - split 80/10/10 delle traiettorie (train / validation / test); con distance train bilanciato tra
   traiettorie a reward basso e alto; si tiene il classifier della epoch con la miglior balanced
   accuracy sul validation; numeri finali sul test.
-Differenze di implementazione rispetto alla 4x4 (non di metodo):
-- nella 7x7 ogni osservazione e' diversa (la disposizione cambia a ogni traiettoria), quindi non si
-  tengono le osservazioni in memoria: dai dati si tengono i "codici" delle caselle (contenuto + 5 se
-  c'e' l'agente) e mappa o immagine si compongono sulla GPU al momento, identiche a quelle
-  dell'ambiente;
-- il classifier lavora solo sui passi reali (il padding non entra mai, come nella 4x4 in training);
-  i passi di padding sono esclusi da loss e metriche.
+Le osservazioni non si tengono in memoria: mappa o immagine si compongono sulla GPU dai codici delle
+caselle (contenuto + 5 se c'e' l'agente), identiche a quelle dell'ambiente.
 
 Dati: Grid7/Dataset/<reward>/task<N>/dataset_<dataset>.h5
 Output: Grid7/Grounding/<State>/<reward>/task<N>/seed<S>/
@@ -34,11 +28,8 @@ import sys
 import time
 from pathlib import Path
 
-# necessario per gli algoritmi deterministici di cuBLAS (va impostato prima di usare la GPU)
+# algoritmi deterministici di cuBLAS; memoria della GPU in segmenti espandibili (evita la frammentazione)
 os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
-# memoria della GPU in segmenti espandibili: senza, la memoria riservata si frammenta (fino a 11.5 GB
-# riservati per 4.7 GB usati) e quella in eccesso finisce nella RAM, con epoch fino a 10 volte piu' lente.
-# Cambia solo come si alloca la memoria, non i calcoli: stessi pesi, bit per bit
 os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
 
 import h5py
@@ -46,7 +37,6 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-# cartella Grid7 (Dataset/ e Grounding/) e motore comune in Grid7/NeuralRewardMachines
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "NeuralRewardMachines"))
 
@@ -56,7 +46,7 @@ from RL.NRM.DeepAutoma import ProbabilisticAutoma
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# modalita' deterministica (come nel DT): stesso seed, stesso modello
+# stesso seed, stesso modello
 torch.backends.cudnn.deterministic = True
 torch.backends.cudnn.benchmark = False
 torch.use_deterministic_algorithms(True)
@@ -65,22 +55,13 @@ GRID_SIZE = 7
 NUM_CONTENTS = ImageRenderer.NUM_CONTENTS   # P, L, D, G, vuota; codice = contenuto + 5 * agente
 NUM_SYMBOLS = NUM_CONTENTS
 
-# iperparametri (come nella 4x4)
-EPOCHS = 100           # massimo di epoch (come nella 4x4)
-# early stopping: ci si ferma se la balanced accuracy sul validation non migliora per PATIENCE epoch di
-# fila (la 4x4 faceva sempre 100 epoch; il modello salvato e' comunque quello della epoch migliore,
-# che nei casi in cui il grounder impara arriva entro poche epoch)
-PATIENCE = 20
+# iperparametri
+EPOCHS = 100
+PATIENCE = 20          # early stopping sulla balanced accuracy del validation
 LR = 1e-3
 MIN_LR = 1e-5
 CLASS_WEIGHT_POWER = 1.0          # peso di classe = 1 / frequenza^potenza
-# traiettorie per batch di training (4x4: 200 symbolic, 100 image), uguale per symbolic e image cosi' i
-# due tipi di stato sono confrontabili (stesso numero di aggiornamenti per epoch). 32 perche' con le
-# passeggiate casuali di medium_replay (fino a 101 osservazioni) 100 traiettorie sono fino a ~10.000
-# immagini 112x112, che non stanno negli 8 GB della GPU (la memoria in eccesso finisce nella RAM e il
-# training diventa ~10 volte piu' lento); 32 traiettorie sono al massimo ~3.200 immagini.
-# Con 200 per symbolic (20 aggiornamenti per epoch invece di 125) il grounder symbolic three_value si
-# fermava troppo presto: provato, balanced accuracy sul test da 72-87% a 93-95% in 3 casi su 5
+# traiettorie per batch di training, uguale per symbolic e image (con image limitato dalla memoria della GPU)
 CHUNK_SIZE = {"symbolic": 32, "image": 32}
 EVAL_CHUNK_SIZE = {"symbolic": 500, "image": 32}   # traiettorie per blocco di valutazione
 
@@ -160,21 +141,10 @@ class GlobalMaxPool(nn.Module):
 
 
 class Grounder(nn.Module):
-    """Osservazione intera -> distribuzione sui 5 simboli (softmax, come nella 4x4).
-    CNN con pooling globale (la struttura standard delle CNN di classificazione): le convoluzioni
-    applicano lo stesso rilevatore in ogni punto dell'osservazione e il max pooling globale raccoglie
-    il risultato, quindi riconoscere "robot sopra un oggetto" non va imparato da capo per ognuna delle 49
-    caselle. (Con flatten + Linear, come nella 4x4 dove le osservazioni erano solo 16, il grounder
-    impara le disposizioni a memoria: provato, symbol accuracy ~29% su distance task6.)
-    image:    conv 3x3 stride 2 + BatchNorm, 16-32-64 filtri come la CNN_grounder della 4x4, piu' un
-              blocco (64 filtri) perche' l'immagine e' 112x112 invece di 64x64: si arriva a 7x7, una
-              posizione per casella, ognuna con un campo visivo di 31 pixel (una casella e' 16 pixel)
-    symbolic: due conv 1x1 + BatchNorm sulla mappa (5, 7, 7), 32-64 filtri: ogni posizione vede solo la
-              propria casella, perche' il simbolo dipende solo dalla casella dell'agente. Con conv 3x3
-              (campo visivo 5x5 caselle) il grounder usava gli oggetti vicini come scorciatoia: provato
-              su three_value medium_replay, seed 0-2, balanced accuracy 85.8% con 3x3, 90.7% con 1x1
-              (image 90.8%); con 4 conv 3x3 come image 86.7%, quindi conta il campo visivo, non la profondita'
-    poi per entrambi: max pooling globale - Linear(64, 128) - ReLU - Dropout(0.2) - Linear(128, 5) - Softmax"""
+    """Osservazione intera -> distribuzione sui 5 simboli. CNN con max pooling globale:
+    image:    4 conv 3x3 stride 2 + BatchNorm (16-32-64-64 filtri), fino a 7x7 (una posizione per casella)
+    symbolic: 2 conv 1x1 + BatchNorm (32-64 filtri): ogni posizione vede solo la propria casella
+    poi: max pooling globale - Linear(64, 128) - ReLU - Dropout(0.2) - Linear(128, 5) - Softmax"""
 
     def __init__(self, state_type):
         super().__init__()
@@ -259,12 +229,8 @@ def make_batch(data, keys):
 # Grounder + automa
 # ---------------------------------------------------------------------------
 def build_automaton(env):
-    """automa della formula come ProbabilisticAutoma (come nella 4x4: initFromDfa, normalizzato, congelato).
-    La libreria che costruisce l'automa numera gli stati in modo diverso a ogni esecuzione: l'automa e'
-    lo stesso, ma i calcoli avvengono in un ordine diverso e i risultati differiscono nelle ultime cifre,
-    abbastanza da cambiare i training instabili. Qui gli stati vengono rinumerati con una visita in
-    ampiezza dallo stato iniziale, seguendo i simboli in ordine fisso (come AutomatonTracker nel DT):
-    stessa formula, stessa numerazione, in qualunque processo."""
+    """automa della formula come ProbabilisticAutoma (initFromDfa, normalizzato, congelato), con gli stati
+    rinumerati da una visita in ampiezza: la libreria numera gli stati in modo diverso a ogni esecuzione."""
     num_states, num_symbols, num_outputs, transitions, outputs = env.get_automaton_specs()
     order, i = [0], 0
     while i < len(order):
@@ -287,10 +253,8 @@ def build_automaton(env):
 
 
 def predict_rewards(classifier, automa, codes, mask):
-    """distribuzione sulle classi di reward (B, L, R) per ogni passo. Il classifier vede solo i passi
-    reali (anche la BatchNorm in training); i passi di padding (dopo la fine della traiettoria)
-    ricevono un vettore nullo e sono poi esclusi da loss e metriche: l'automa e' causale, quindi i
-    passi reali non ne risentono."""
+    """distribuzione sulle classi di reward (B, L, R) per ogni passo; il classifier vede solo i passi
+    reali, il padding riceve un vettore nullo ed e' escluso da loss e metriche."""
     sym_real = classifier(codes.to(device))
     sym = torch.zeros(*mask.shape, NUM_SYMBOLS, device=device)
     sym[mask.to(device)] = sym_real
@@ -341,8 +305,7 @@ def balanced(counts):
 def formula_symmetries(automaton, num_formula_symbols, num_symbols):
     """Permutazioni dei simboli della formula che lasciano invariato il reward per ogni sequenza
     possibile (es. in "visita pickaxe e lava" scambiare pickaxe e lava non cambia nulla): dai soli
-    reward non si possono distinguere. Visita in ampiezza sulle coppie di stati (automa originale,
-    automa con simboli permutati). Identica alla 4x4."""
+    reward non si possono distinguere."""
     symmetries = []
     for perm in itertools.permutations(range(num_formula_symbols)):
         pi = list(perm) + list(range(num_formula_symbols, num_symbols))

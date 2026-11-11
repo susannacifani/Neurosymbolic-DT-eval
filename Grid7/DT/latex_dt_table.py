@@ -19,31 +19,25 @@ import pandas as pd
 # =====================================================================
 # CONFIGURAZIONE: modifica qui cosa generare, poi premi Run
 # =====================================================================
-SEEDS = None             # es. [0] oppure [0, 1, 2]; None = tutti i seed trovati
-K = None                 # None = risultati principali (K = 50); es. 5 = ablation sul contesto
-AUTOMATON = None         # None = DT standard; "grounder" = DT + NRM; "true" = DT + stato vero dell'automa
-OUTPUT = None            # None = DT/latex/dt_<approccio>_K<k>.txt
+SEEDS = None             # es. [0, 1, 2]; None = tutti i seed trovati
+AUTOMATON = None         # None = DT; "grounder" = DT+NRM; "true" = DT+Oracle
+EPOCH = 200              # 200 = modelli finali; 50, 100 o 150 = modelli intermedi
+OUTPUT = None            # None = DT/latex/<approccio>_epoch<E>.txt
 # =====================================================================
 
-K_FULL = 50              # contesto del DT standard (CONTEXT_LEN in decision_transformer.py)
+K = 20                   # CONTEXT_LEN in decision_transformer.py
 STATE_TYPES = [("Symbolic", "Symbolic States"), ("Image", "Image States")]
 REWARD_TYPES = [("three_value", "Three-Value Reward"), ("distance", "Distance Reward")]
 DATASETS = [("medium_expert", "medium-expert"), ("medium", "medium"), ("medium_replay", "medium-replay")]
 TASKS = range(1, 11)
-# righe di media: task con sole visite (1-6) e task con anche vincoli G(!c) (7-10)
 TASK_GROUPS = [("Mean 1--6", range(1, 7)), ("Mean 7--10", range(7, 11))]
 METRICS = [("Reward", lambda d: d["reward_puro"].mean()),
            ("CDR", lambda d: d["discounted_reward"].mean()),
            ("SR (\\%)", lambda d: 100.0 * d["success"].mean())]
 
 DT_DIR = Path(__file__).resolve().parent
-k = K if K is not None else K_FULL
-if AUTOMATON is not None:
-    ROOT = DT_DIR / "automaton_state" / AUTOMATON / f"K{k}"
-elif K is not None:
-    ROOT = DT_DIR / "context_ablation" / f"K{K}"
-else:
-    ROOT = DT_DIR
+ROOT = DT_DIR / "automaton_state" / AUTOMATON if AUTOMATON is not None else DT_DIR
+EVAL_DIR = "eval" if EPOCH == 200 else f"epoch{EPOCH:03d}/eval"
 APPROACH = {None: "DT", "grounder": "DT+NRM", "true": "DT+Oracle"}[AUTOMATON]
 APPROACH_TEXT = {None: "",
                  "grounder": " The DT also receives the automaton state predicted by the NRM grounder (learned "
@@ -55,7 +49,7 @@ SLUG = APPROACH.lower().replace("+", "_").replace(" ", "_")
 
 
 def value(state_type, reward_type, task, seed, dataset, metric):
-    csv = ROOT / state_type / reward_type / f"task{task}" / f"seed{seed}" / "eval" / f"eval_{dataset}.csv"
+    csv = ROOT / state_type / reward_type / f"task{task}" / f"seed{seed}" / EVAL_DIR / f"eval_{dataset}.csv"
     return dict(METRICS)[metric](pd.read_csv(csv)) if csv.exists() else None
 
 
@@ -89,7 +83,7 @@ def block(state_type, reward_type, title):
                 cells.append(fmt(values))
         lines.append(f"{task} & " + " & ".join(cells) + r" \\")
     lines.append(r"\midrule")
-    # media sui task del gruppo per ogni seed (solo i seed con tutti i task), poi media +- std tra i seed
+    # media sui task del gruppo per ogni seed (solo i seed con tutti i task), poi tra i seed
     for label, tasks in TASK_GROUPS:
         cells = []
         for ds, _ in DATASETS:
@@ -109,7 +103,8 @@ def table():
     n_seeds = f"{len(SEEDS)} seed{'s' if len(SEEDS) > 1 else ''}"
     seed_part = (f" Mean $\\pm$ std over {len(SEEDS)} seeds ({seeds_text}); in the mean rows, std across seeds of "
                  f"the per-seed average over the tasks of the group." if len(SEEDS) > 1 else f" Seed {seeds_text}.")
-    caption = (f"\\textbf{{{APPROACH} Complete Evaluation ($K={k}$, {test_episodes()} test layouts, {n_seeds}).}} "
+    caption = (f"\\textbf{{{APPROACH} Complete Evaluation ($K={K}$, epoch {EPOCH}, {test_episodes()} test episodes, "
+               f"{n_seeds}).}} Test episodes start from fixed positions on the 50 training layouts. "
                f"Per-task results across all combinations of state representations (Symbolic vs.\\ Image) and "
                f"reward functions (Three-value vs.\\ Distance).{APPROACH_TEXT} Metrics reported: mean undiscounted "
                f"return (\\emph{{Reward}}), cumulative discounted reward ($\\gamma=0.99$, \\emph{{CDR}}), and success "
@@ -121,7 +116,7 @@ def table():
         r"\centering",
         r"\small",
         f"\\caption{{{caption}}}",
-        f"\\label{{tab:{SLUG}_k{k}_all_complete}}",
+        f"\\label{{tab:{SLUG}_epoch{EPOCH}_all_complete}}",
         r"\resizebox{\textwidth}{!}{%",
         r"\begin{tabular}{r ccc ccc ccc}",
         r"\toprule",
@@ -145,13 +140,13 @@ def table():
 
 
 if __name__ == "__main__":
-    out = Path(OUTPUT) if OUTPUT else DT_DIR / "latex" / f"{SLUG}_K{k}.txt"
+    out = Path(OUTPUT) if OUTPUT else DT_DIR / "latex" / f"{SLUG}_epoch{EPOCH}.txt"
     out.parent.mkdir(parents=True, exist_ok=True)
     tex, missing = table()
-    header = (f"% {APPROACH}, K={k}, seed {', '.join(map(str, SEEDS))} - generato da DT/latex_dt_table.py\n"
+    header = (f"% {APPROACH}, K={K}, epoch {EPOCH}, seed {', '.join(map(str, SEEDS))} - generato da DT/latex_dt_table.py\n"
               f"% servono \\usepackage{{booktabs,graphicx}}\n")
     out.write_text(header + tex + "\n")
     for (state_type, reward_type), n in missing.items():
         if n:
             print(f"ATTENZIONE {state_type}/{reward_type}: mancano {n} valutazioni (task x dataset x seed x metrica)")
-    print(f"{APPROACH}, K={k}, seed {SEEDS}: tabella scritta in {out}")
+    print(f"{APPROACH}, epoch {EPOCH}, seed {SEEDS}: tabella scritta in {out}")

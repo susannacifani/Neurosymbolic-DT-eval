@@ -1,34 +1,23 @@
+"""Tabella dei risultati del grounding sul test set: una tabella per configurazione (Symbolic / Image x
+three_value / distance), una riga per task. In ogni cella:
+  balanced accuracy: media delle recall per classe di reward (le classi sono sbilanciate)
+  symbol accuracy:   simbolo giusto nelle caselle, sui simboli della formula e a meno delle simmetrie
+                     della formula (solo cio' che dai reward si puo' distinguere)
+media +- deviazione standard tra i seed.
+Uso (dalla cartella NRM): python3 Grid7/Grounding/print_grounding_table.py [seed1,...]
+"""
 import re
 import sys
 from pathlib import Path
 
 import numpy as np
 
-# Uso (dalla cartella NRM): python3 Grounding/print_grounding_table.py [seed]
-#   seed: es. 0,1,2 (default: tutti i seed trovati)
-# Stampa in un colpo solo tutte e 4 le configurazioni (Symbolic/Image x distance/three_value),
-# una tabella per configurazione, tutti i 10 task.
-#
-# In ogni cella due numeri, entrambi sul test set:
-#   balanced accuracy / symbol accuracy
-# - balanced accuracy: il grounder + automa prevede bene il reward? Media delle recall per
-#   classe (le classi di reward sono sbilanciate, "vittoria" e' rara, quindi l'accuracy
-#   grezza non e' affidabile)
-# - symbol accuracy: il grounder riconosce il simbolo giusto nelle caselle? Calcolata sui
-#   simboli della formula (gli oggetti non usati contano come vuoto) e a meno delle
-#   simmetrie della formula, cioe' solo su cio' che dai reward si puo' davvero distinguere
-# Ogni numero e' media +- deviazione standard tra i seed (con un solo seed c'e' solo la media).
-
 # =====================================================================
-# CONFIGURAZIONE: modifica qui cosa stampare, poi premi Run
+# CONFIGURAZIONE
 # =====================================================================
-# es. [0] oppure [0, 1, 2]; None = tutti i seed trovati. Per confrontare Symbolic e Image servono gli
-# stessi seed per entrambi
-SEEDS_DEFAULT = None
+SEEDS_DEFAULT = None     # es. [0, 1, 2]; None = tutti i seed trovati
 # =====================================================================
 
-# ordine dei blocchi: prima Symbolic, poi Image sotto;
-# dentro ciascuno, da sinistra a destra, prima three_value poi distance
 CONFIGS = [
     ("Symbolic", "three_value"),
     ("Symbolic", "distance"),
@@ -36,11 +25,9 @@ CONFIGS = [
     ("Image", "distance"),
 ]
 
-# ordine delle colonne, da sinistra a destra (nome file -> etichetta mostrata)
 DATASETS = [("medium_expert", "expert"), ("medium", "medium"), ("medium_replay", "replay")]
 NUM_TASKS = 10
 
-# risultati del grounding: Grounding/<State>/<reward>/task<N>/seed<S>/log/log_<dataset>.txt
 GROUNDING_ROOT = Path(__file__).resolve().parent
 
 BALANCED_PATTERN = re.compile(r"BALANCED ACCURACY FINALE GLOBALE SUL TEST SET:\s*([0-9.]+)%")
@@ -72,7 +59,6 @@ def parse_log(path):
 def mean_std(values):
     if len(values) == 1:
         return f"{values[0]:.1f}"
-    # deviazione standard campionaria tra i seed
     return f"{np.mean(values):.1f} ± {np.std(values, ddof=1):.1f}"
 
 
