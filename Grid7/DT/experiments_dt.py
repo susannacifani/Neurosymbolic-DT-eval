@@ -2,10 +2,13 @@
 
 Per ogni combinazione: training (MAX_EPOCHS epoch fisse) e valutazione del modello finale e di quelli
 alle epoch SAVE_EPOCHS. Risultati in DT/<State>/<reward>/task<N>/seed<S>/ (vedi decision_transformer.py).
-Uso: imposta la CONFIGURAZIONE e premi Run.
+Uso: imposta la CONFIGURAZIONE e premi Run, oppure
+    python3 DT/experiments_dt.py [reward1,...] [task1,...] [dataset1,...] [state1,...]
+(gli argomenti mancanti prendono i valori della configurazione)
 """
 import gc
 import multiprocessing as mp
+import sys
 import traceback
 
 import torch
@@ -57,6 +60,10 @@ def run_job(job):
 
 
 if __name__ == "__main__":
+    REWARD_TYPES = sys.argv[1].split(",") if len(sys.argv) > 1 else REWARD_TYPES
+    TASKS = [int(t) for t in sys.argv[2].split(",")] if len(sys.argv) > 2 else TASKS
+    DATASETS = sys.argv[3].split(",") if len(sys.argv) > 3 else DATASETS
+    STATE_TYPES = sys.argv[4].split(",") if len(sys.argv) > 4 else STATE_TYPES
     jobs = [(st, rt, task, ds, seed) for st in STATE_TYPES for rt in REWARD_TYPES for task in TASKS
             for ds in DATASETS for seed in SEEDS]
     if NUM_WORKERS > 1:
